@@ -96,9 +96,7 @@ public class UsersController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
-		User activeUser = usersService.getUserByEmail(email);
+		model.addAttribute("userList", usersService.getUsers());
 		return "home";
 	}
 }

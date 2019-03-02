@@ -26,6 +26,7 @@ public class User {
 		this.email = email;
 		this.name = name;
 		this.lastName = lastName;
+		this.balance = 100;
 	}
 
 	public User() {}
