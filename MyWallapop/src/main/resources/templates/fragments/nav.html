@@ -12,6 +12,14 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
 				<li><a href="/home" th:text=#{nav.home} style="color: black;"></a></li>
+				<li id="users-menu" class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"
+						th:text="#{nav.user.management}" style="color: black;"> <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/user/list" th:text="#{nav.user.management.see}"></a></li>
+					</ul>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a id="btnLanguage" href=" #"

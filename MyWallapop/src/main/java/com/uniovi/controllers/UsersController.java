@@ -30,8 +30,10 @@ public class UsersController {
 	@Autowired
 	private SignUpFormValidator signUpFormValidator;
 
-	@RequestMapping("/user/list")
-	public String getListado(Model model) {
+	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
+	public String getListado(Model model, Principal principal) {
+		User loggedUser = usersService.getUserByEmail(principal.getName());
+		model.addAttribute("loggedUser", loggedUser);
 		model.addAttribute("usersList", usersService.getUsers());
 		return "user/list";
 	}
@@ -100,7 +102,6 @@ public class UsersController {
 	public String home(Model model, Principal principal) {
 		User loggedUser = usersService.getUserByEmail(principal.getName());
 		model.addAttribute("loggedUser", loggedUser);
-		model.addAttribute("userList", usersService.getUsers());
 		return "home";
 	}
 }
