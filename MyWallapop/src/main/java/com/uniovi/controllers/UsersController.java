@@ -1,5 +1,7 @@
 package com.uniovi.controllers;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,12 +92,14 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model model) {
+	public String login() {
 		return "login";
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home(Model model) {
+	public String home(Model model, Principal principal) {
+		User loggedUser = usersService.getUserByEmail(principal.getName());
+		model.addAttribute("loggedUser", loggedUser);
 		model.addAttribute("userList", usersService.getUsers());
 		return "home";
 	}

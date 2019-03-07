@@ -1,5 +1,5 @@
 <!-- nav.html -->
-<nav class="navbar navbar-inverse">
+<nav style="background-color: #97cbff;" >
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -11,12 +11,12 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
-				<li><a href="/" th:text=#{nav.home}></a></li>
+				<li><a href="/home" th:text=#{nav.home} style="color: black;"></a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a id="btnLanguage" href=" #"
 					class="dropdown-toggle" data-toggle="dropdown" role="button"
-					aria-haspopup="true" aria-expanded="false"> <span
+					aria-haspopup="true" aria-expanded="false" style="color: black;"> <span
 						th:text="#{language.change}"></span> <span class="caret"></span>
 				</a>
 					<ul id="languageDropdownMenuButton" class="dropdown-menu">
@@ -30,18 +30,32 @@
 								style="border: 0; float: left; margin-right: 15px" /> <span
 								th:text="#{language.es}"></span>
 						</a></li>
-					</ul></li>
+				</ul></li>
 				<li sec:authorize="!isAuthenticated()"><a href="/signup"
-					th:text="#{signup.message}"> <span
+					th:text="#{signup.message}" style="color: black;"> <span
 						class="glyphicon glyphicon-user"></span>
 				</a></li>
 				<li sec:authorize="!isAuthenticated()"><a href="/login"
-					th:text="#{login.message}"> <span
+					th:text="#{login.message}" style="color: black;"> <span
 						class="glyphicon glyphicon-log-in"></span>
 				</a></li>
-				<li sec:authorize="isAuthenticated()"><a href="/logout"> <span
-						class="glyphicon glyphicon-log-out"></span> <span th:text=#{logout.button}></span>
-				</a></li>
+				
+				
+				<li class="dropdown" sec:authorize="isAuthenticated()">
+					<a id="btnGroup" href=" #"
+						class="dropdown-toggle" data-toggle="dropdown" role="button"
+						aria-haspopup="true" aria-expanded="false" style="color: black;"> <span th:text=${loggedUser.email}></span> 
+						<span class="caret"></span>
+					</a>
+					<ul id="usersdropdownMenuButton" class="dropdown-menu">
+						<li style="text-align:center" sec:authorize="hasRole('ROLE_USER')"> 
+							<span></span> <span th:text=${loggedUser.getMoney()} style="font-size: 20pt; color: #00db00;"></span>
+						</li>
+						<li><a href="/logout" style="color: black;"> 
+							<span class="glyphicon glyphicon-log-out"></span> <span th:text=#{logout.button}></span>
+						</a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 	</div>
