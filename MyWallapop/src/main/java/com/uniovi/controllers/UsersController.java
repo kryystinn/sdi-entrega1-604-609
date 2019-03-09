@@ -32,8 +32,6 @@ public class UsersController {
 
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String getListado(Model model, Principal principal) {
-		User loggedUser = usersService.getUserByEmail(principal.getName());
-		model.addAttribute("loggedUser", loggedUser);
 		model.addAttribute("usersList", usersService.getUsers());
 		return "user/list";
 	}
@@ -100,8 +98,6 @@ public class UsersController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model, Principal principal) {
-		User loggedUser = usersService.getUserByEmail(principal.getName());
-		model.addAttribute("loggedUser", loggedUser);
 		return "home";
 	}
 }
