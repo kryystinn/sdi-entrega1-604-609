@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+
+<body>
+
+	<!-- Barra de Navegación superior -->
+	<nav th:replace="fragments/nav" />
+
+	<div class="container" style="">
+		<h3 th:text=#{offers.list} style="text-align: left"></h3>
+
+		<button type="button" id="updateButton" class="btn btn-default" th:text=${actualice}></button>
+		<script>
+			$("#updateButton").click(function() {
+				$("#tableOffers").load('/offer/list/update');
+			});
+		</script>
+
+		<p th:text=#{actual.offers} style="text-align: left"></p>
+
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableOffers" id="tableOffers">
+
+				<thead>
+					<tr>
+						<th></th>
+						<th style="text-align: left" th:text=#{table.id}></th>
+						<th style="text-align: left" th:text=#{table.title}></th>
+						<th style="text-align: left" th:text=#{table.description}></th>
+						<th style="text-align: left" th:text=#{table.date}></th>
+						<th style="text-align: left" th:text=#{table.price}></th>
+						
+						
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="offer : ${offerList}">
+						<th class="col-md-1"></th>
+						<td th:text="${offer.id}">1</td>
+						<td th:text="${offer.title}">Camiseta</td>
+						<td th:text="${offer.description}">Roja</td>
+						<td th:text="${offer.date}">08/03/2019</td>
+						<td th:text="${offer.price}">10</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>

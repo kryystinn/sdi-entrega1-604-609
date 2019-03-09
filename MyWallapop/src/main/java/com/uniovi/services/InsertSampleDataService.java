@@ -1,8 +1,14 @@
 package com.uniovi.services;
 
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
 
 @Service
@@ -32,6 +38,16 @@ public class InsertSampleDataService {
 		User user6 = new User("admin@email.com", "admin", "admin");
 		user6.setPassword("admin");
 		user6.setRole(rolesService.getRoles()[2]);
+		
+		Set user1Offers = new HashSet<Offer>() {
+			{
+			add(new Offer("Camiseta", "Negra", Calendar.DATE, 12.0, user1));
+			add(new Offer("Silla", "Sin una pata", Calendar.DATE, 4.0, user1));
+			}
+			};
+			user1.setOffers(user1Offers);
+		
+		
 		usersService.addUser(user1);
 		usersService.addUser(user2);
 		usersService.addUser(user3);
