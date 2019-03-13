@@ -21,16 +21,11 @@ public class AddOfferValidator implements Validator{
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "Error.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "Error.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "price", "Error.empty");
-		if (offer.getTitle().length() < 4 || offer.getTitle().length() > 24) {
+		if (offer.getTitle().length() < 4 || offer.getTitle().length() > 24)
 			errors.rejectValue("title", "Error.title.length");
-		}
-		if (offer.getDescription().length() > 100) {
+		if (offer.getDescription().length() > 100 || offer.getDescription().length() < 10)
 			errors.rejectValue("description", "Error.description.length");
-		}
-		
-		if (offer.getPrice() < 0.0 || (offer.getPrice().intValue()) < 0) {
+		if (offer.getPrice() < 0.0 || (offer.getPrice().intValue()) < 0)
 			errors.rejectValue("price", "Error.price");
-		}
 	}
-
 }

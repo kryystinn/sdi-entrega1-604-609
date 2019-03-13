@@ -21,7 +21,7 @@ public class OffersService {
 		offersRepository.save(offer);
 	}
 
-	public Page<Offer> getOffersForUser(Pageable pageable, User user) {
+	public Page<Offer> getUsersOffers(Pageable pageable, User user) {
 		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
 		offers = offersRepository.findAllByUser(pageable, user);
 		return offers;
