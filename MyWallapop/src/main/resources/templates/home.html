@@ -7,69 +7,46 @@
 		<h2 th:text="#{welcome.message}"></h2>
 		<p>
 			<span th:text="#{home.description}"></span>
-			<span
-				th:text="#{user.authenticated.as}" sec:authentication="principal.username" th:inline="text">
-			</span>
 		</p>
-
-		<h3 th:text=#{offers.general} style="text-align: left"></h3>
-		
-		<form class="navbar-form" action="/offer/list">
-			<div class="form-group">
-				<input name="searchText" type="text" class="form-control" size="50"
-					th:placeholder="#{search.for.title}">
+		<div sec:authorize="hasRole('ROLE_USER')">
+			<h3 th:text=#{offers.general} style="text-align: left"></h3>
+			<p>
+				<form class="navbar-form" action="/home">
+					<div class="form-group">
+						<input name="searchText" type="text" class="form-control" size="50"
+							th:placeholder="#{search.for.title}">
+					</div>
+					<button type="submit" class="btn btn-default" th:text="#{search}"></button>
+				</form>
+			</p>
+			<div class="table-responsive">
+				<table class="table table-hover" th:fragment="tableOffers" id="tableOffers" style="text-align: left">
+					<thead>
+						<tr>
+							<th></th>
+							<th style="text-align: left" th:text=#{table.username}></th>
+							<th style="text-align: left" th:text=#{table.title}></th>
+							<th style="text-align: left" th:text=#{table.description}></th>
+							<th style="text-align: left" th:text=#{table.date}></th>
+							<th style="text-align: left" th:text=#{table.price}></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="offer : ${offerList}">
+							<th class="col-md-1"></th>
+							<td th:text="${offer.user.name}"></td>
+							<td th:text="${offer.title}"></td>
+							<td th:text="${offer.description}"></td>
+							<td th:text="${offer.date}"></td>
+							<td th:text="${offer.price}"></td>
+							<td><a sec:authorize="hasRole('ROLE_USER')"
+								th:href="${'/offer/buy/' + offer.id}" th:text=#{buy}></a></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<button type="submit" class="btn btn-default" th:text="#{search}"></button>
-		</form>
-		
-		<button type="button" id="updateButton" class="btn btn-default"
-			th:text=#{actualice}></button>
-		<script th:inline="javascript">
- 				/*<![CDATA[*/
-				$("#updateButton").click(function() {
-					var numberPage = [[${param.page}]];
-					var urlUpdate = '/home/update';
-					/* if (numberPage != null ){
-					 urlUpdate += "?page="+numberPage[0];
-					 } */
-					 $("#tableOffers").load(urlUpdate);
-					 });
-					 /*]]>*/
-		</script>
-
-		<div class="table-responsive">
-			<table class="table table-hover" th:fragment="tableOffers" id="tableOffers" style="text-align: left">
-
-				<thead>
-					<tr>
-						<th></th>
-						<th style="text-align: left" th:text=#{table.username}></th>
-						<th style="text-align: left" th:text=#{table.title}></th>
-						<th style="text-align: left" th:text=#{table.description}></th>
-						<th style="text-align: left" th:text=#{table.date}></th>
-						<th style="text-align: left" th:text=#{table.price}></th>
-						
-						
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="offer : ${offerList}">
-						<th class="col-md-1"></th>
-						<td th:text="${offer.user.name}"></td>
-						<td th:text="${offer.title}"></td>
-						<td th:text="${offer.description}"></td>
-						<td th:text="${offer.date}"></td>
-						<td th:text="${offer.price}"></td>
-						<td><a sec:authorize="hasRole('ROLE_USER')"
-							th:href="${'/offer/buy/' + offer.id}" th:text=#{buy}></a></td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</div>
-	
-	
-	
 	<footer th:replace="fragments/footer" />
 </body>
 </html>

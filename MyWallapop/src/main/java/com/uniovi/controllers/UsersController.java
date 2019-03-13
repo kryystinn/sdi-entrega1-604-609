@@ -114,15 +114,12 @@ public class UsersController {
 		return "login";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home(Model model, Principal principal) {
-		// Usuario autenticado
-		String email = principal.getName();
-		User user = usersService.getUserByEmail(email);
-
-		// Mostrar todas las ofertas menos las propias
-		List<Offer> offers = offersService.getAllOffersExcept(user);
-		model.addAttribute("offerList", offers);
+	@RequestMapping("/home")
+	public String home(Model model, @RequestParam(value = "", required = false) String searchText) {
+		if (searchText != null && !searchText.isEmpty())
+			model.addAttribute("offerList", offersService.searchOffersByTitle(searchText));
+		else
+			model.addAttribute("offerList", offersService.getOffers());
 		return "home";
 	}
 }

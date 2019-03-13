@@ -10,8 +10,9 @@ import com.uniovi.entities.User;
 
 public interface OffersRepository extends CrudRepository<Offer, Long>{
 
-	@Query("SELECT r FROM Offer r WHERE r.user = ?1 ORDER BY r.id ASC ")
+	@Query("SELECT o FROM Offer o WHERE o.user = ?1 ORDER BY o.id ASC ")
 	List<Offer> findAllByUser(User user);
 	
-	
+	@Query("SELECT o FROM Offer o WHERE LOWER(o.title) LIKE LOWER('%'+?1+'%')") 
+	List<Offer> searchByTitle(String seachtext);
 }

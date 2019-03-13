@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
@@ -54,12 +55,9 @@ public class OffersController {
 		return "redirect:/offer/list";
 	}
 
-	// Mostrar lista de ofertas y actualizarla
-
 	@RequestMapping("/offer/list")
-	public String getList(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
+	public String getList(Model model, Principal principal) {
+		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 		model.addAttribute("offerList", offersService.getOffersForUser(user));
 		return "offer/list";
@@ -67,23 +65,10 @@ public class OffersController {
 
 	@RequestMapping("/offer/list/update")
 	public String updateList(Model model, Principal principal) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
+		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 		model.addAttribute("offerList", offersService.getOffersForUser(user));
 		return "offer/list :: tableOffers";
-	}
-
-	@RequestMapping("/home/update")
-	public String updateListOfertas(Model model, Principal principal) {
-		// Usuario autenticado
-		String email = principal.getName();
-		User user = usersService.getUserByEmail(email);
-
-		// Actualizar todas las ofertas menos las propias
-		List<Offer> offers = offersService.getAllOffersExcept(user);
-		model.addAttribute("offerList", offers);
-		return "home :: tableOffers";
 	}
 
 	// Dar de baja una oferta

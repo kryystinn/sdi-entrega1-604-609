@@ -20,7 +20,6 @@ public class Offer {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	
 	public Offer(Long id, String title, String description, String date, Double price) {
 		super();
 		this.id = id;
@@ -39,8 +38,7 @@ public class Offer {
 		this.user = user;
 	}
 
-	public Offer() {
-	}
+	public Offer() {}
 	
 	public Long getId() {
 		return id;
