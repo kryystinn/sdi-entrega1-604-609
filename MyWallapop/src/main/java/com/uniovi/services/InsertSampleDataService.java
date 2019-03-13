@@ -41,8 +41,8 @@ public class InsertSampleDataService {
 		
 		Set user1Offers = new HashSet<Offer>() {
 			{
-			add(new Offer("Camiseta", "Negra", Calendar.DATE, 12.0, user1));
-			add(new Offer("Silla", "Sin una pata", Calendar.DATE, 4.0, user1));
+			add(new Offer("Camiseta", "Negra", "2019/03/01", 12.0, user1));
+			add(new Offer("Silla", "Sin una pata", "2019/02/21", 4.0, user1));
 			}
 			};
 			user1.setOffers(user1Offers);

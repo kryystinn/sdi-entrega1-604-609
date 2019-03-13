@@ -23,8 +23,8 @@ import com.uniovi.validators.AddOfferValidator;
 @Controller
 public class OffersController {
 
-	@Autowired
-	private HttpSession httpSession;
+//	@Autowired
+//	private HttpSession httpSession;
 
 	@Autowired
 	private OffersService offersService;
@@ -35,7 +35,6 @@ public class OffersController {
 	@Autowired
 	private AddOfferValidator addOfferValidator;
 
-	// Dar de alta una nueva oferta
 
 	@RequestMapping(value = "/offer/add")
 	public String getOffer(Model model) {

@@ -10,7 +10,7 @@ public class Offer {
 	private Long id;
 	private String title;
 	private String description;
-	private int date;
+	private String date;
 	private Double price;
 	
 	@ManyToOne
@@ -18,7 +18,7 @@ public class Offer {
 	private User user;
 
 	
-	public Offer(Long id, String title, String description, int date, Double price) {
+	public Offer(Long id, String title, String description, String date, Double price) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -27,7 +27,7 @@ public class Offer {
 		this.price = price;
 	}
 
-	public Offer(String title, String description, int date, Double price, User user) {
+	public Offer(String title, String description, String date, Double price, User user) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -63,11 +63,11 @@ public class Offer {
 		this.description = description;
 	}
 	
-	public int getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(int date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	

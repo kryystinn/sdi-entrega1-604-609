@@ -10,11 +10,18 @@
 	<div class="container" style="">
 		<h3 th:text=#{offers.list} style="text-align: left"></h3>
 
-		<button type="button" id="updateButton" class="btn btn-default" th:text=${actualice}></button>
-		<script>
-			$("#updateButton").click(function() {
-				$("#tableOffers").load('/offer/list/update');
-			});
+		<button type="button" id="updateButton" class="btn btn-default" value=${actualice}>AAAA</button>
+		<script th:inline="javascript">
+ 				/*<![CDATA[*/
+				$("#updateButton").click(function() {
+					var numberPage = [[${param.page}]];
+					var urlUpdate = '/offer/list/update';
+					/* if (numberPage != null ){
+					 urlUpdate += "?page="+numberPage[0];
+					 } */
+					 $("#tableOffers").load(urlUpdate);
+					 });
+					 /*]]>*/
 		</script>
 
 		<p th:text=#{actual.offers} style="text-align: left"></p>
@@ -37,11 +44,11 @@
 				<tbody>
 					<tr th:each="offer : ${offerList}">
 						<th class="col-md-1"></th>
-						<td th:text="${offer.id}">1</td>
-						<td th:text="${offer.title}">Camiseta</td>
-						<td th:text="${offer.description}">Roja</td>
-						<td th:text="${offer.date}">08/03/2019</td>
-						<td th:text="${offer.price}">10</td>
+						<td th:text="${offer.id}"></td>
+						<td th:text="${offer.title}"></td>
+						<td th:text="${offer.description}"></td>
+						<td th:text="${offer.date}"></td>
+						<td th:text="${offer.price}"></td>
 					</tr>
 				</tbody>
 			</table>
