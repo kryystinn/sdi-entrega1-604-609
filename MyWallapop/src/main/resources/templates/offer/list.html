@@ -10,7 +10,7 @@
 	<div class="container" style="">
 		<h3 th:text=#{offers.list} style="text-align: left"></h3>
 
-		<button type="button" id="updateButton" class="btn btn-default" value=${actualice}>AAAA</button>
+		<button type="button" id="updateButton" class="btn btn-default" th:text=#{actualice}></button>
 		<script th:inline="javascript">
  				/*<![CDATA[*/
 				$("#updateButton").click(function() {
@@ -23,7 +23,7 @@
 					 });
 					 /*]]>*/
 		</script>
-
+		
 		<p th:text=#{actual.offers} style="text-align: left"></p>
 
 		<div class="table-responsive">
@@ -49,6 +49,8 @@
 						<td th:text="${offer.description}"></td>
 						<td th:text="${offer.date}"></td>
 						<td th:text="${offer.price}"></td>
+						<td><a sec:authorize="hasRole('ROLE_USER')"
+							th:href="${'/offer/delete/' + offer.id}" th:text=#{remove}></a></td>
 					</tr>
 				</tbody>
 			</table>

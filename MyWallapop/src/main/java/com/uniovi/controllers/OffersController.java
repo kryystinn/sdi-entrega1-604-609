@@ -2,8 +2,6 @@ package com.uniovi.controllers;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,6 +35,8 @@ public class OffersController {
 	private AddOfferValidator addOfferValidator;
 
 
+	// Dar de alta una oferta
+	
 	@RequestMapping(value = "/offer/add")
 	public String getOffer(Model model) {
 		model.addAttribute("offer", new Offer());
@@ -56,6 +57,9 @@ public class OffersController {
 		return "redirect:/offer/list";
 	}
 
+	
+	// Mostrar lista de ofertas y actualizarla
+	
 	@RequestMapping("/offer/list")
 	public String getList(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -71,6 +75,15 @@ public class OffersController {
 //		User user = usersService.getUserByEmail(email);
 		model.addAttribute("offerList", offersService.getOffers());
 		return "offer/list :: tableOffers";
+	}
+	
+	
+	// Dar de baja una oferta
+	
+	@RequestMapping("/offer/delete/{id}")
+	public String deleteOffer(@PathVariable Long id) {
+		offersService.deleteOffer(id);
+		return "redirect:/offer/list";
 	}
 
 }
