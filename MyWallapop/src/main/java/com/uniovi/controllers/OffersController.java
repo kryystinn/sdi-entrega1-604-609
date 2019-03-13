@@ -1,7 +1,6 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ import com.uniovi.validators.AddOfferValidator;
 
 @Controller
 public class OffersController {
-
-//	@Autowired
-//	private HttpSession httpSession;
 
 	@Autowired
 	private OffersService offersService;
@@ -81,19 +77,11 @@ public class OffersController {
 	@RequestMapping("/home/update")
 	public String updateListOfertas(Model model, Principal principal) {
 		// Usuario autenticado
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
+		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 
-		// Mostrar todas las ofertas menos las propias
-		List<User> userOffers = new ArrayList<User>();
-		userOffers = usersService.getUsers();
-
-		List<Offer> offers = new ArrayList<Offer>();
-		for (User u : userOffers) {
-			if (!u.equals(user))
-				offers.addAll(offersService.getOffersForUser(u));
-		}
+		// Actualizar todas las ofertas menos las propias
+		List<Offer> offers = offersService.getAllOffersExcept(user);
 		model.addAttribute("offerList", offers);
 		return "home :: tableOffers";
 	}

@@ -97,7 +97,7 @@ public class UsersController {
 		model.addAttribute("user", new User());
 		return "signup";
 	}
-
+O
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(@Validated User user, BindingResult result, Model model) {
 		signUpFormValidator.validate(user, result);
@@ -117,19 +117,11 @@ public class UsersController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model, Principal principal) {
 		// Usuario autenticado
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
+		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 
 		// Mostrar todas las ofertas menos las propias
-		List<User> userOffers = new ArrayList<User>();
-		userOffers = usersService.getUsers();
-
-		List<Offer> offers = new ArrayList<Offer>();
-		for (User u : userOffers) {
-			if (!u.equals(user))
-				offers.addAll(offersService.getOffersForUser(u));
-		}
+		List<Offer> offers = offersService.getAllOffersExcept(user);
 		model.addAttribute("offerList", offers);
 		return "home";
 	}
