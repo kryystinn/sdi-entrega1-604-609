@@ -97,7 +97,7 @@ public class UsersController {
 		model.addAttribute("user", new User());
 		return "signup";
 	}
-O
+
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(@Validated User user, BindingResult result, Model model) {
 		signUpFormValidator.validate(user, result);
