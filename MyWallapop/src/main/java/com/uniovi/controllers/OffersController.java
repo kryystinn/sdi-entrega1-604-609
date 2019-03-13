@@ -71,11 +71,31 @@ public class OffersController {
 
 	@RequestMapping("/offer/list/update")
 	public String updateList(Model model, Principal principal) {
-//		String email = principal.getName();
-//		User user = usersService.getUserByEmail(email);
-		model.addAttribute("offerList", offersService.getOffers());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		model.addAttribute("offerList", offersService.getOffersForUser(user));
 		return "offer/list :: tableOffers";
 	}
+	
+	
+	// Lista de ofertas para comprar
+//	
+//	@RequestMapping("/home")
+//	public String getListGeneral(Model model) {
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		String email = auth.getName();
+//		User user = usersService.getUserByEmail(email);
+//		model.addAttribute("offerListGeneral", offersService.getOffers());
+//		return "home";
+//	}
+//	
+//	
+//	@RequestMapping("home")
+//	public String updateListGeneral(Model model, Principal principal) {
+//		model.addAttribute("offerListGeneral", offersService.getOffers());
+//		return "home :: tableOffersGeneral";
+//	}
 	
 	
 	// Dar de baja una oferta

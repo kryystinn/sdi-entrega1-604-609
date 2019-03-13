@@ -28,7 +28,7 @@
 				</thead>
 				<tbody>
 					<tr th:each="user : ${usersList}">
-						<td><input type="checkbox" onclick="getRow(this)" /></td>
+						<td><input type="checkbox" th:value="${user.id}" name="checkboxes" onclick="getRow(this)" /></td>
 						<td style="text-align: center" th:text="${user.email}">xxxxx@email.com</td>
 						<td style="text-align: center" th:text="${user.name}">Mariano</td>
 						<td style="text-align: center" th:text="${user.lastName}">Viejo Feito</td>
@@ -36,8 +36,20 @@
 				</tbody>
 			</table>
 			<p style="text-align: left">
-				<button type="button" class="btn btn-primary"
-					th:text="#{button.delete}" style="text-align: left"></button>
+				<button type="button" id="deleteButton" class="btn btn-primary"
+					th:text="#{button.delete}" th:href="${'/user/delete/'}" style="text-align: left"></button>
+					<!--  <script th:inline="javascript">
+		 				/*<![CDATA[
+						$("#deleteButton").click(function() {
+							/**var numberPage = [[${param.page}]]; */
+							var urlUpdate = '/user/delete';
+							 /** if (numberPage != null ){
+							 urlUpdate += "?page="+numberPage[0];
+							 }*/
+							 $("#usersList").load(urlUpdate);
+							 });
+							 /*]]>*/
+					</script> -->
 			</p>
 		</div>
 	</div>

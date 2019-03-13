@@ -1,16 +1,20 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import com.uniovi.entities.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.uniovi.entities.User;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
 import com.uniovi.services.UsersService;
@@ -54,13 +58,19 @@ public class UsersController {
 		return "user/details";
 	}
 
-	@RequestMapping("/user/delete/{id}")
-	public String delete(@PathVariable Long id) {
-		usersService.deleteUser(id);
+	@RequestMapping(value = "/user/delete/", method = RequestMethod.POST)
+	public String delete(Model model, @RequestParam(value="user.id", required=false) long[] listId, BindingResult result) {
+		if (listId.length != 0) {
+		
+			for (Long i: listId) {
+				usersService.getUser(i);
+				usersService.deleteUser(i);
+			}
+		}
 		return "redirect:/user/list";
 	}
 
-	@RequestMapping(value = "/user/edit/{id}")
+	@RequestMapping(value = "/user/edit")
 	public String getEdit(Model model, @PathVariable Long id) {
 		User user = usersService.getUser(id);
 		model.addAttribute("user", user);
