@@ -17,12 +17,12 @@
 				$("#updateButton").click(function() {
 					var numberPage = [[${param.page}]];
 					var urlUpdate = '/offer/list/update';
-					/* if (numberPage != null ){
-					 urlUpdate += "?page="+numberPage[0];
-					 } */
+					if (numberPage != null ){
+					 	urlUpdate += "?page="+numberPage[0];
+					 }
 					 $("#tableOffers").load(urlUpdate);
-					 });
-					 /*]]>*/
+				});
+				/*]]>*/
 		</script>
 		
 		<p th:text=#{actual.offers} style="text-align: left"></p>
@@ -49,6 +49,7 @@
 				</tbody>
 			</table>
 		</div>
+		<footer th:replace="fragments/pagination"/>
 	</div>
 	<footer th:replace="fragments/footer" />
 </body>

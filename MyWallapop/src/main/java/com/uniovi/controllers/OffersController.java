@@ -1,11 +1,10 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
@@ -45,33 +43,33 @@ public class OffersController {
 	@RequestMapping(value = "/offer/add", method = RequestMethod.POST)
 	public String setOffer(Model model, @Validated Offer offer, BindingResult result) {
 		addOfferValidator.validate(offer, result);
-
 		if (result.hasErrors()) {
 			model.addAttribute("usersList", usersService.getUsers());
 			return "offer/add";
 		}
-
 		offersService.addOffer(offer);
 		return "redirect:/offer/list";
 	}
 
 	@RequestMapping("/offer/list")
-	public String getList(Model model, Principal principal) {
+	public String getList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		model.addAttribute("offerList", offersService.getOffersForUser(user));
+		Page<Offer> offerList = offersService.getOffersForUser(pageable, user);
+		model.addAttribute("offerList", offerList.getContent());
+		model.addAttribute("page", offerList);
 		return "offer/list";
 	}
 
 	@RequestMapping("/offer/list/update")
-	public String updateList(Model model, Principal principal) {
+	public String updateList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		model.addAttribute("offerList", offersService.getOffersForUser(user));
+		Page<Offer> offerList = offersService.getOffersForUser(pageable, user);
+		model.addAttribute("offerList", offerList.getContent());
+		model.addAttribute("page", offerList);
 		return "offer/list :: tableOffers";
 	}
-
-	// Dar de baja una oferta
 
 	@RequestMapping("/offer/delete/{id}")
 	public String deleteOffer(@PathVariable Long id) {

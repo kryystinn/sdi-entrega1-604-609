@@ -1,12 +1,11 @@
 package com.uniovi.controllers;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
+import com.uniovi.entities.Offer;
 import com.uniovi.services.OffersService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
@@ -115,11 +114,16 @@ public class UsersController {
 	}
 
 	@RequestMapping("/home")
-	public String home(Model model, @RequestParam(value = "", required = false) String searchText) {
+	public String home(Model model, Pageable pageable, @RequestParam(value = "", required = false) String searchText) {
+		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
+		
 		if (searchText != null && !searchText.isEmpty())
-			model.addAttribute("offerList", offersService.searchOffersByTitle(searchText));
+			offerList = offersService.searchOffersByTitle(pageable, searchText);
 		else
-			model.addAttribute("offerList", offersService.getOffers());
-		return "home";
+			offerList = offersService.getOffers(pageable);
+		
+		model.addAttribute("offerList", offerList.getContent());
+		model.addAttribute("page", offerList);
+		return "/home";
 	}
 }
