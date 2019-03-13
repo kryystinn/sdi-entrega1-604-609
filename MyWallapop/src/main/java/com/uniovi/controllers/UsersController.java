@@ -1,9 +1,12 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
+import com.uniovi.services.OffersService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
 import com.uniovi.services.UsersService;
@@ -32,10 +37,13 @@ public class UsersController {
 	private SecurityService securityService;
 
 	@Autowired
+	private OffersService offersService;
+	
+	@Autowired
 	private SignUpFormValidator signUpFormValidator;
 
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
-	public String getListado(Model model, Principal principal) {
+	public String getListado(Model model) {
 		model.addAttribute("usersList", usersService.getUsers());
 		return "user/list";
 	}
@@ -58,15 +66,15 @@ public class UsersController {
 		return "user/details";
 	}
 
-	@RequestMapping(value = "/user/delete/", method = RequestMethod.POST)
-	public String delete(Model model, @RequestParam(value="user.id", required=false) long[] listId, BindingResult result) {
-		if (listId.length != 0) {
-		
-			for (Long i: listId) {
-				usersService.getUser(i);
-				usersService.deleteUser(i);
-			}
-		}
+	@RequestMapping(value = "/user/delete/{listaIds}", method = RequestMethod.POST)
+	public String delete(Model model, @PathVariable String[] listIds,
+			BindingResult result) {
+//		if (listIds.size() != 0) {
+//
+//			for (Long i : listIds) {
+//				usersService.deleteUser(i);
+//			}
+//		}
 		return "redirect:/user/list";
 	}
 
@@ -108,6 +116,21 @@ public class UsersController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model, Principal principal) {
+		// Usuario autenticado
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+
+		// Mostrar todas las ofertas menos las propias
+		List<User> userOffers = new ArrayList<User>();
+		userOffers = usersService.getUsers();
+
+		List<Offer> offers = new ArrayList<Offer>();
+		for (User u : userOffers) {
+			if (!u.equals(user))
+				offers.addAll(offersService.getOffersForUser(u));
+		}
+		model.addAttribute("offerList", offers);
 		return "home";
 	}
 }

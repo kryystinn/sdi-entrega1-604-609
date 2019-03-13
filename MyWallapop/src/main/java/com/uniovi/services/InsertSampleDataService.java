@@ -43,23 +43,23 @@ public class InsertSampleDataService {
 			private static final long serialVersionUID = 1L;
 
 			{
-			add(new Offer("Camiseta", "Negra", "2019/03/01", 12.0, user1));
-			add(new Offer("Silla", "Sin una pata", "2019/02/21", 4.0, user1));
-			add(new Offer("Teclado", "Gaming", "2019/02/15", 20.0, user1));
+				add(new Offer("Camiseta", "Negra", "2019/03/01", 12.0, user1));
+				add(new Offer("Silla", "Sin una pata", "2019/02/21", 4.0, user1));
+				add(new Offer("Teclado", "Gaming", "2019/02/15", 20.0, user1));
 			}
-			};
-			user1.setOffers(user1Offers);
+		};
+		user1.setOffers(user1Offers);
 
-			Set<Offer> user2Offers = new HashSet<Offer>() {
-				private static final long serialVersionUID = 1L;
+		Set<Offer> user2Offers = new HashSet<Offer>() {
+			private static final long serialVersionUID = 1L;
 
-				{
-					add(new Offer("Jarra", "De cristal", "2019/03/12", 10.0, user2));
-					add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real", "2019/01/21", 500.0, user2));
-					add(new Offer("Riñonera", "Nike, completamente nueva", "2019/03/03", 24.50, user2));
-				}
-			};
-			user2.setOffers(user2Offers);
+			{
+				add(new Offer("Jarra", "De cristal", "2019/03/12", 10.0, user2));
+				add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real", "2019/01/21", 500.0, user2));
+				add(new Offer("Riñonera", "Nike, completamente nueva", "2019/03/03", 24.50, user2));
+			}
+		};
+		user2.setOffers(user2Offers);
 
 		
 		usersService.addUser(user1);

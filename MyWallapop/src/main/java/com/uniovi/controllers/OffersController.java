@@ -1,6 +1,8 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -34,9 +36,8 @@ public class OffersController {
 	@Autowired
 	private AddOfferValidator addOfferValidator;
 
-
 	// Dar de alta una oferta
-	
+
 	@RequestMapping(value = "/offer/add")
 	public String getOffer(Model model) {
 		model.addAttribute("offer", new Offer());
@@ -57,9 +58,8 @@ public class OffersController {
 		return "redirect:/offer/list";
 	}
 
-	
 	// Mostrar lista de ofertas y actualizarla
-	
+
 	@RequestMapping("/offer/list")
 	public String getList(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -77,29 +77,29 @@ public class OffersController {
 		model.addAttribute("offerList", offersService.getOffersForUser(user));
 		return "offer/list :: tableOffers";
 	}
-	
-	
-	// Lista de ofertas para comprar
-//	
-//	@RequestMapping("/home")
-//	public String getListGeneral(Model model) {
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		String email = auth.getName();
-//		User user = usersService.getUserByEmail(email);
-//		model.addAttribute("offerListGeneral", offersService.getOffers());
-//		return "home";
-//	}
-//	
-//	
-//	@RequestMapping("home")
-//	public String updateListGeneral(Model model, Principal principal) {
-//		model.addAttribute("offerListGeneral", offersService.getOffers());
-//		return "home :: tableOffersGeneral";
-//	}
-	
-	
+
+	@RequestMapping("/home/update")
+	public String updateListOfertas(Model model, Principal principal) {
+		// Usuario autenticado
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+
+		// Mostrar todas las ofertas menos las propias
+		List<User> userOffers = new ArrayList<User>();
+		userOffers = usersService.getUsers();
+
+		List<Offer> offers = new ArrayList<Offer>();
+		for (User u : userOffers) {
+			if (!u.equals(user))
+				offers.addAll(offersService.getOffersForUser(u));
+		}
+		model.addAttribute("offerList", offers);
+		return "home :: tableOffers";
+	}
+
 	// Dar de baja una oferta
-	
+
 	@RequestMapping("/offer/delete/{id}")
 	public String deleteOffer(@PathVariable Long id) {
 		offersService.deleteOffer(id);
