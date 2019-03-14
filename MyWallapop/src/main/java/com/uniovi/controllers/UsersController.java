@@ -66,15 +66,16 @@ public class UsersController {
 		return "user/details";
 	}
 
-	@RequestMapping(value = "/user/delete/{listaIds}", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
 	public String delete(Model model, @PathVariable String[] listIds,
 			BindingResult result) {
-//		if (listIds.size() != 0) {
-//
-//			for (Long i : listIds) {
-//				usersService.deleteUser(i);
-//			}
-//		}
+		
+		if (listIds.length != 0) {
+			
+			for (String i : listIds) {
+				usersService.deleteUser(Long.parseLong(i));
+			}
+		}
 		return "redirect:/user/list";
 	}
 
@@ -130,4 +131,33 @@ public class UsersController {
 		model.addAttribute("page", offerList);
 		return "/home";
 	}
+	
+	@RequestMapping("/home/update")
+	public String updateHome(Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
+		String email = principal.getName();
+		User user = usersService.getUserByEmail(email);
+		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
+		offerList = offersService.getOffersToBuy(pageable, user); 
+		model.addAttribute("offerList", offerList.getContent());
+		return "/home :: tableOffers";
+	}
+	
+	
+	@RequestMapping(value="/offer/{id}/buy", method=RequestMethod.GET)
+	public String setBoughtTrue(Model model, Principal principal, @PathVariable Long id){
+		String email = principal.getName();
+		User user = usersService.getUserByEmail(email);
+		Offer offerToBuy = offersService.searchOfferById(id);
+		
+		if (usersService.hasEnoughMoney(user, offerToBuy)) {
+			offersService.setOfferBought(true, id);
+			usersService.changeBalance(user, offerToBuy);
+			// Añadir a MIS COMPRAS
+		}
+		//else
+		// Mensaje de error o algo
+		return "redirect:/home";
+	}
+	
+	
 }

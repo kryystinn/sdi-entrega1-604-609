@@ -39,8 +39,39 @@
 							<td th:text="${offer.description}"></td>
 							<td th:text="${offer.date}"></td>
 							<td th:text="${offer.price}"></td>
-							<td><a sec:authorize="hasRole('ROLE_USER')"
-								th:href="${'/offer/buy/' + offer.id}" th:text=#{buy}></a></td>
+							
+							<td><div sec:authorize="hasRole('ROLE_USER')">
+								<div th:if="${offer.bought}">
+
+									<button type="button" th:id="${'boughtButton' + offer.id}"
+										class="btn btn-default" th:text="#{sold}" style="text-align: left" disabled></button>
+
+								</div>
+								
+								<div th:unless="${offer.bought}">
+
+									<button type="button" th:id="${'buyButton' + offer.id}"
+										class="btn btn-info" th:text="#{buy}" style="text-align: left">
+									</button>
+									
+									<script th:inline="javascript">
+									/*<![CDATA[*/
+									 $( "#buyButton[[${offer.id}]]" ).click(function() {
+									 	$.get( "/offer/[[${offer.id}]]/buy", function( data ) {
+										 	var numberPage = [[${param.page}]];
+										 	var urlUpdate = '/home/update';
+										 	if ( numberPage != null ){
+										 		urlUpdate += "?page="+numberPage[0];
+										 	}
+											$("#tableOffers").load(urlUpdate);
+										 	});
+									 });
+									 /*]]>*/
+									 </script>
+									 
+							   </div>
+							</div>
+						</td>
 						</tr>
 					</tbody>
 				</table>

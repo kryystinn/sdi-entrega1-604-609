@@ -52,4 +52,14 @@ public class OffersService {
 	public void deleteOffer(Long id) {
 		offersRepository.deleteById(id);
 	}
+	
+	
+	public void setOfferBought(boolean revised, Long id) {
+		offersRepository.updateBuy(revised, id);
+	}
+	
+	public Offer searchOfferById(Long id) {
+		Offer offer = offersRepository.searchById(id);
+		return offer;
+	}
 }

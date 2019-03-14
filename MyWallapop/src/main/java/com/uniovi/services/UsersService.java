@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
 import com.uniovi.repositories.UsersRepository;
 
@@ -41,4 +42,13 @@ public class UsersService {
 	public void deleteUser(Long id) {
 		usersRepository.deleteById(id);
 	}
+	
+	public boolean hasEnoughMoney(User u, Offer oToBuy) {
+		return u.getBalance() - oToBuy.getPrice() >= 0;
+	}
+	
+	public void changeBalance(User u, Offer oToBuy) {
+		u.setBalance(u.getBalance() - oToBuy.getPrice());;
+	}
+	
 }

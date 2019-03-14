@@ -81,5 +81,6 @@ public class OffersController {
 		offersService.deleteOffer(id);
 		return "redirect:/offer/list";
 	}
+	
 
 }

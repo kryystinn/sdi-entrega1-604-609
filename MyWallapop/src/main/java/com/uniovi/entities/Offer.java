@@ -15,7 +15,9 @@ public class Offer {
 	private String description;
 	private String date;
 	private Double price;
+	private boolean bought = false;
 	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -88,6 +90,14 @@ public class Offer {
 		this.user = user;
 	}
 	
+	public boolean isBought() {
+		return bought;
+	}
+
+	public void setBought(boolean bought) {
+		this.bought = bought;
+	}
+
 	
 	
 }

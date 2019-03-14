@@ -20,7 +20,7 @@ public class User {
 	private String email;
 	private String name;
 	private String lastName;
-	private int balance; //saldo
+	private double balance; //saldo
 	private String role;
 	private String password;
 	@Transient
@@ -37,7 +37,7 @@ public class User {
 		this.email = email;
 		this.name = name;
 		this.lastName = lastName;
-		this.balance = 100;
+		this.balance = 100.0;
 	}
 
 	public User() {}
@@ -48,13 +48,13 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public int getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	public String getMoney() {
 		return balance+"€";
 	}
-	public void setBalance(int balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}	
 	public long getId() {
