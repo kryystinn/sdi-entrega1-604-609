@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import java.security.Principal;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,13 +115,16 @@ public class UsersController {
 	}
 
 	@RequestMapping("/home")
-	public String home(Model model, Pageable pageable, @RequestParam(value = "", required = false) String searchText) {
+	public String home(Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
+		String email = principal.getName();
+		User user = usersService.getUserByEmail(email);
+		
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
 		
 		if (searchText != null && !searchText.isEmpty())
 			offerList = offersService.searchOffersByTitle(pageable, searchText);
 		else
-			offerList = offersService.getOffers(pageable);
+			offerList = offersService.getOffersToBuy(pageable, user); 
 		
 		model.addAttribute("offerList", offerList.getContent());
 		model.addAttribute("page", offerList);

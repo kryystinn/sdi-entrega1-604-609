@@ -31,7 +31,7 @@ public class OffersController {
 	@Autowired
 	private AddOfferValidator addOfferValidator;
 
-	// Dar de alta una oferta
+
 
 	@RequestMapping("/offer/add")
 	public String getOffer(Model model) {

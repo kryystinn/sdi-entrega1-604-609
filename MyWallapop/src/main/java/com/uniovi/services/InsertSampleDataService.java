@@ -46,7 +46,6 @@ public class InsertSampleDataService {
 				add(new Offer("Camiseta", "Negra", "2019-03-01", 12.0, user1));
 				add(new Offer("Silla", "Sin una pata", "2019-02-21", 4.0, user1));
 				add(new Offer("Teclado", "Gaming", "2019-02-15", 20.0, user1));
-				add(new Offer("Teclado", "Gaming", "2019-02-15", 20.0, user1));
 				add(new Offer("Teclado básico", "No-Gaming", "2019-03-13", 20.0, user1));
 				add(new Offer("Funda móvil", "Sin abrir, nueva", "2019-05-30", 20.0, user1));
 			}
@@ -65,6 +64,32 @@ public class InsertSampleDataService {
 			}
 		};
 		user2.setOffers(user2Offers);
+		
+		Set<Offer> user3Offers = new HashSet<Offer>() {
+			
+			private static final long serialVersionUID = 1L;
+
+			{
+				add(new Offer("Coche Opel Corsa", "ITV hasta el verano pasado, 150.000 km", "2019-01-12", 1500.0, user3));
+				add(new Offer("Chaqueta vaquera", "La vendo porque no la uso. Usada dos veces.", "2018-12-14", 18.0, user3));
+				add(new Offer("Perfume", "Black Opium de YVS, 90ml, prescintado de tienda.", "2019-03-13", 50.0, user3));
+			}
+		};
+		
+		user3.setOffers(user3Offers);
+		
+		
+		Set<Offer> user4Offers = new HashSet<Offer>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				add(new Offer("Set de platos", "De cerámica, en buen estado", "2019-02-12", 65.0, user4));
+				add(new Offer("Set de maquillaje", "Fue un regalo de Reyes que no me ha gustado.", "2019-01-20", 20.0, user4));
+				add(new Offer("Set de toallas", "De IKEA.", "2019-01-20", 15.0, user4));
+			}
+		};
+		user4.setOffers(user4Offers);
+		
 		usersService.addUser(user1);
 		usersService.addUser(user2);
 		usersService.addUser(user3);

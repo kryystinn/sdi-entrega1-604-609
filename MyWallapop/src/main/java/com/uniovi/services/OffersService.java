@@ -1,6 +1,7 @@
 package com.uniovi.services;
 
 import java.util.LinkedList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +17,7 @@ public class OffersService {
 
 	@Autowired
 	private OffersRepository offersRepository;
+	
 
 	public void addOffer(Offer offer) {
 		offersRepository.save(offer);
@@ -36,6 +38,14 @@ public class OffersService {
 	public Page<Offer> getOffers(Pageable pageable) {
 		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
 		offers = offersRepository.findAll(pageable);
+		return offers;
+	}
+	
+	public Page<Offer> getOffersToBuy(Pageable pageable, User user) {
+		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+		
+		offers = offersRepository.findOffersToBuy(pageable, user);
+
 		return offers;
 	}
 
