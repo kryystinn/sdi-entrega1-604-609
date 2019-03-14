@@ -3,6 +3,9 @@ package com.uniovi.controllers;
 import java.security.Principal;
 import java.util.LinkedList;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.uniovi.entities.User;
 import com.uniovi.entities.Offer;
@@ -144,20 +150,14 @@ public class UsersController {
 	
 	
 	@RequestMapping(value="/offer/{id}/buy", method=RequestMethod.GET)
-	public String setBoughtTrue(Model model, Principal principal, @PathVariable Long id){
+	public String setBoughtTrue(HttpSession session, Model model, Principal principal, @PathVariable Long id){
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 		Offer offerToBuy = offersService.searchOfferById(id);
 		
-		if (usersService.hasEnoughMoney(user, offerToBuy)) {
-			offersService.setOfferBought(true, id);
-			usersService.changeBalance(user, offerToBuy);
-			// Añadir a MIS COMPRAS
+		if (usersService.buyOffer(user, offerToBuy)) {
+			session.setAttribute("balance", user.getMoney());
 		}
-		//else
-		// Mensaje de error o algo
 		return "redirect:/home";
 	}
-	
-	
 }

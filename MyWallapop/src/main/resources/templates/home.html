@@ -9,6 +9,9 @@
 			<span th:text="#{home.description}"></span>
 		</p>
 		<div sec:authorize="hasRole('ROLE_USER')">
+			<p>
+				<span class="alert alert-success" th:if="${message!=null}">ERROR</span>
+			</p>
 			<h3 th:text=#{offers.general} style="text-align: left"></h3>
 			<p>
 				<form class="navbar-form" action="/home">
@@ -49,11 +52,9 @@
 								</div>
 								
 								<div th:unless="${offer.bought}">
-
 									<button type="button" th:id="${'buyButton' + offer.id}"
 										class="btn btn-info" th:text="#{buy}" style="text-align: left">
 									</button>
-									
 									<script th:inline="javascript">
 									/*<![CDATA[*/
 									 $( "#buyButton[[${offer.id}]]" ).click(function() {
