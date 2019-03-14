@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+
+<body>
+
+	<!-- Barra de Navegacion superior -->
+	<nav th:replace="fragments/nav" />
+
+	<div class="container" style="">
+		<h3 th:text=#{purchases.list} style="text-align: left"></h3>
+		<p th:text=#{actual.purchases} style="text-align: left"></p>
+
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tablePurchases" id="tablePurchases">
+				<thead>
+					<tr>
+						<th></th>
+						<th style="text-align: left" th:text=#{table.username}></th>
+						<th style="text-align: left" th:text=#{table.title}></th>
+						<th style="text-align: left" th:text=#{table.description}></th>
+						<th style="text-align: left" th:text=#{table.price}></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="purchase : ${purchasesList}">
+						<th class="col-md-1"></th>
+						<td th:text="${offer.user.name}"></td>
+						<td th:text="${offer.title}"></td>
+						<td th:text="${offer.description}"></td>
+						<td th:text="${offer.price}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<footer th:replace="fragments/pagination"/>
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>

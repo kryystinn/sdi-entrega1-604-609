@@ -82,5 +82,15 @@ public class OffersController {
 		return "redirect:/offer/list";
 	}
 	
+	@RequestMapping("/offer/purchases")
+	public String getPurchases(Model model, Pageable pageable, Principal principal) {
+		String email = principal.getName();
+		User user = usersService.getUserByEmail(email);
+		Page<Offer> purchasesList = offersService.getUsersPurchases(pageable, user);
+		model.addAttribute("purchasesList", purchasesList.getContent());
+		model.addAttribute("page", purchasesList);
+		return "offer/purchases";
+	}
+	
 
 }

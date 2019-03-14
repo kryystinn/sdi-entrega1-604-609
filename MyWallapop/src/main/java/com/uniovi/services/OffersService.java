@@ -62,4 +62,10 @@ public class OffersService {
 		Offer offer = offersRepository.searchById(id);
 		return offer;
 	}
+	
+	public Page<Offer> getUsersPurchases(Pageable pageable, User user) {
+		Page<Offer> purchases = new PageImpl<Offer>(new LinkedList<Offer>());
+		//purchases = offersRepository.findPurchasesByUserId();
+		return purchases;
+	}
 }
