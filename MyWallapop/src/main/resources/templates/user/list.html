@@ -8,6 +8,8 @@
 		<h3 th:text=#{list.users} style="text-align: left"></h3>
 		
 		</script>
+		
+		<form action="/user/delete" method="post">
 		<div class="table-responsive" th:fragment="tableUsers">
 			<table class="table table-hover" id="tableUsers">
 				<thead>
@@ -24,17 +26,16 @@
 				</thead>
 				<tbody>
 					<tr th:each="user : ${usersList}">
-						<td><input type="checkbox" th:value="${user.id}" th:name="checkboxes" onclick="getRow(this)" /></td>
+						<td><input type="checkbox" th:value="${user.getId()}" name="checkboxes"/></td>
 						<td style="text-align: center" th:text="${user.email}">xxxxx@email.com</td>
 						<td style="text-align: center" th:text="${user.name}">Mariano</td>
 						<td style="text-align: center" th:text="${user.lastName}">Viejo Feito</td>
 					</tr>
 				</tbody>
 			</table>
-			<p style="text-align: left">
-				<button type="button" id="deleteButton" class="btn btn-primary"
+			
+				<button type="submit" id="deleteButton" class="btn btn-primary"
 					th:text="#{button.delete}" style="text-align: left"></button>
-			</p>
 			<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			function getRow(n) {
@@ -44,6 +45,7 @@
 			/*]]>*/
 			</script>
 		</div>
+		</form>
 	</div>
 	<footer th:replace="fragments/footer" />
 </body>

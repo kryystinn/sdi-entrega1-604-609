@@ -73,7 +73,7 @@ public class UsersController {
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam(value="checkboxes", required = false) List<String> idList) {
 		
-		if (idList.size() != 0) {
+		if (idList != null) {
 			for (String i : idList) {
 				usersService.deleteUser(Long.parseLong(i));
 			}

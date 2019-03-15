@@ -38,6 +38,8 @@ public class InsertSampleDataService {
 		User user6 = new User("admin@email.com", "admin", "admin");
 		user6.setPassword("admin");
 		user6.setRole(rolesService.getRoles()[2]);
+		User user7 = new User("a@gmail.com", "A", "V");
+		user7.setPassword("123456");
 		
 		Set<Offer> user1Offers = new HashSet<Offer>() {
 			private static final long serialVersionUID = 1L;
@@ -107,5 +109,6 @@ public class InsertSampleDataService {
 		usersService.addUser(user4);
 		usersService.addUser(user5);
 		usersService.addUser(user6);
+		usersService.addUser(user7);
 	}
 }
