@@ -90,6 +90,17 @@ public class InsertSampleDataService {
 		};
 		user4.setOffers(user4Offers);
 		
+		Set<Offer> user5Offers = new HashSet<Offer>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				add(new Offer("Cascos con micro", "De conector USB, funciona 10/10", "2019-032-08", 25.50, user5));
+				add(new Offer("Libro", "Luna de Plutón by Dross", "2019-01-10", 14.0, user5));
+				add(new Offer("Teclado", "Mecánico, le falta la ñ pero está chulo.", "2019-02-15", 10.0, user5));
+			}
+		};
+		user5.setOffers(user5Offers);
+		
 		usersService.addUser(user1);
 		usersService.addUser(user2);
 		usersService.addUser(user3);

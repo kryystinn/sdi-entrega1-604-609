@@ -2,6 +2,7 @@ package com.uniovi.controllers;
 
 import java.security.Principal;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -73,12 +74,10 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
-	public String delete(Model model, @PathVariable String[] listIds,
-			BindingResult result) {
+	public String delete(@RequestParam(value="checkboxes", required = false) List<String> idList) {
 		
-		if (listIds.length != 0) {
-			
-			for (String i : listIds) {
+		if (idList.size() != 0) {
+			for (String i : idList) {
 				usersService.deleteUser(Long.parseLong(i));
 			}
 		}
@@ -129,7 +128,7 @@ public class UsersController {
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
 		
 		if (searchText != null && !searchText.isEmpty())
-			offerList = offersService.searchOffersByTitle(pageable, searchText);
+			offerList = offersService.searchOffersByTitle(pageable, searchText, user);
 		else
 			offerList = offersService.getOffersToBuy(pageable, user); 
 		
