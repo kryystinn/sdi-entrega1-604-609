@@ -33,7 +33,9 @@
 					</ul>
 				</li>
 				
-				<li sec:authorize="hasRole('ROLE_USER')" ><a href="/offer/purchases" th:text=#{nav.my.purchases} style="color: black;"></a></li>
+				<li sec:authorize="hasRole('ROLE_USER')" >
+					<a href="/offer/purchases" th:text=#{nav.my.purchases} style="color: black;"></a>
+				</li>
 			</ul>  
 				</li>
 			<ul class="nav navbar-nav navbar-right">
