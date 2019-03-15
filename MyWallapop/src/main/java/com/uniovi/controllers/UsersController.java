@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import com.uniovi.entities.User;
 import com.uniovi.entities.Offer;
+import com.uniovi.entities.User;
 import com.uniovi.services.OffersService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
@@ -48,6 +44,7 @@ public class UsersController {
 	
 	@Autowired
 	private SignUpFormValidator signUpFormValidator;
+	
 
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String getListado(Model model) {
@@ -156,7 +153,13 @@ public class UsersController {
 		
 		if (usersService.buyOffer(user, offerToBuy)) {
 			session.setAttribute("balance", user.getMoney());
+			session.setAttribute("error", "Error.buy.money");
+			
 		}
+		
+		if (offerToBuy.getUser() == null)
+			session.setAttribute("error", "Error.buy.seller");
+		
 		return "redirect:/home";
 	}
 }
