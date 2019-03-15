@@ -25,7 +25,7 @@ public class AddOfferValidator implements Validator{
 			errors.rejectValue("title", "Error.title.length");
 		if (offer.getDescription().length() > 100 || offer.getDescription().length() < 10)
 			errors.rejectValue("description", "Error.description.length");
-		if (offer.getPrice() < 0.0 || (offer.getPrice().intValue()) < 0)
+		if (offer.getPrice() < 0.0)
 			errors.rejectValue("price", "Error.price");
 	}
 }
