@@ -135,7 +135,7 @@ public class UsersController {
 	}
 	
 	@RequestMapping("/home/update")
-	public String updateHome(Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
+	public String updateOffersTable(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());

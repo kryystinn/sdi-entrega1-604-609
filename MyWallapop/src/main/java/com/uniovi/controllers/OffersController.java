@@ -1,6 +1,8 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +36,10 @@ public class OffersController {
 	@RequestMapping("/offer/add")
 	public String getOffer(Model model) {
 		model.addAttribute("offer", new Offer());
-		model.addAttribute("usersList", usersService.getUsers());
+		//model.addAttribute("usersList", usersService.getUsers());
+
+		Date myDate = new Date();
+		model.addAttribute("date", new SimpleDateFormat("yyyy-MM-dd").format(myDate));
 		return "offer/add";
 	}
 
