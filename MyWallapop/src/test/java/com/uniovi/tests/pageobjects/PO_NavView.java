@@ -32,7 +32,6 @@ public class PO_NavView extends PO_View {
 		assertTrue(elementos.size()==1);
 	}
 	
-	
 	/**
 	 * Selecciona el enlace de idioma correspondiente al texto textLanguage
 	 * @param driver: apuntando al navegador abierto actualmente.

@@ -1,5 +1,7 @@
 package com.uniovi.tests;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,10 +13,16 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.uniovi.tests.pageobjects.PO_HomeView;
+import com.uniovi.tests.pageobjects.PO_LoginView;
+import com.uniovi.tests.pageobjects.PO_NavView;
+import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
@@ -76,6 +84,11 @@ public class MyWallapopTests {
 	
 	// Ejecutar antes de cada prueba para que este en un estado determinista
 	public void initdb() {
+		
+		//Borramos todas las entidades.
+		usersRepository.deleteAll();
+		
+		//Ahora las volvemos a crear
 		User user1 = new User("pedro@gmail.com", "Pedro", "Díaz");
 		user1.setPassword("123456");
 		user1.setRole(rolesService.getRoles()[0]);
@@ -200,44 +213,168 @@ public class MyWallapopTests {
 		driver.quit();
 	}
 
-	// PR01. Acceder a la página principal /
+	// PR01. Registro de Usuario con datos válidos.
 	@Test
 	public void PR01() {
-		PO_HomeView.checkWelcome(driver, PO_Properties.getSPANISH());
-	}
-
-	// PR02. Opción de navegación. Pinchar en el enlace Registro en la página
-	// principal.
-	@Test
-	public void PR02() {
-		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-	}
-
-	// PR03. Opción de navegación. Pinchar en el enlace Iniciar sesión en la página
-	// principal (que debería de ser el mismo).
-	@Test
-	public void PR03() {
-		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-	}
-
-	// PR04. Opción de navegación. Cambio de idioma de Español a Ingles y vuelta a
-	// Español
-	@Test
-	public void PR04() {
-		PO_HomeView.checkChangeIdiom(driver, "btnSpanish", "btnEnglish", PO_Properties.getSPANISH(),
-				PO_Properties.getENGLISH());
-		// SeleniumUtils.esperarSegundos(driver, 2);
-	}
-
-	// PR05. Prueba del formulario de registro. Registro con datos correctos.
-	@Test
-	public void PR05() {
 		// Vamos al formulario de registro
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "prueba@gmail.com", "Soy una", "Prueba", "123456", "123456");
-		// Comprobamos que entramos en home
+		// Comprobamos que entramos en home (un elemento especifico de home para Users como Ofertas)
 		PO_View.checkElement(driver, "text", "Ofertas");
 	}
 
+	// PR02. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).
+	@Test
+	public void PR02() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_RegisterView.fillForm(driver, "ola", "Jose", "Perez Vazquez", "123456", "123456");
+		// Comprobamos el error de email corto
+		PO_RegisterView.checkKey(driver, "Error.signup.email.length", PO_Properties.getSPANISH());
+		// Rellenamos el formulario de nuevo
+		PO_RegisterView.fillForm(driver, "jose@email.com", "c", "Perez Vazquez", "123456", "123456");
+		// Comprobamos el error de nombre corto
+		PO_RegisterView.checkKey(driver, "Error.signup.name.length", PO_Properties.getSPANISH());
+		// Rellenamos el formulario de nuevo
+		PO_RegisterView.fillForm(driver, "jose@email.com", "Jose", "P", "123456", "123456");
+		// Comprobamos el error de apellidos cortos
+		PO_RegisterView.checkKey(driver, "Error.signup.lastName.length", PO_Properties.getSPANISH());
+	}
+
+	// PR03. Registro de usuario con datos inválidos (repetición de contraseña inválida).
+	@Test
+	public void PR03() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_RegisterView.fillForm(driver, "pedro@gmail.com", "Pedro", "Diaz Atapuerca", "123456", "1234567");
+		PO_View.getP();
+		// Comprobamos el error de no coincidencia de contraseñas
+		PO_RegisterView.checkKey(driver, "Error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
+	}
+
+	// PR04. Registro de usuario con datos inválidos (email existente).
+	@Test
+	public void PR04() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_RegisterView.fillForm(driver, "pedro@gmail.com", "Pedro", "Diaz Atapuerca", "123456", "123456");
+		PO_View.getP();
+		// Comprobamos el error de email repetido
+		PO_RegisterView.checkKey(driver, "Error.signup.email.duplicate", PO_Properties.getSPANISH());
+	}
+
+	// PR05. Inicio de sesión con datos válidos (administrador).
+	@Test
+	public void PR05() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que tenemos la funcion de gestionar usuarios, exclusiva del admin
+		PO_View.checkElement(driver, "text", "Gestionar Usuarios");
+	}
+	
+	// PR06. Inicio de sesión con datos válidos (usuario estándar).
+	@Test
+	public void PR06() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123456");
+		// Comprobamos que tenemos la opcion de ver las compras realizadas por el usuario
+		PO_View.checkElement(driver, "text", "Mis compras");
+	}
+	
+	// PR07. Inicio de sesión con datos inválidos (usuario estándar, campo email y contraseña vacíos).
+	@Test
+	public void PR07() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "a", "123456");
+		// Comprobamos que lanza un error al estar vacio el email
+		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+		// Rellenamos el formulario de nuevo
+		PO_LoginView.fillForm(driver, "lucas@gmail.com", "a");
+		// Comprobamos que lanza un error al estar vacia la contraseña
+		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+	}
+	
+	// PR08. Inicio de sesión con datos válidos (usuario estándar, email existente, pero contraseña incorrecta).
+	@Test
+	public void PR08() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123");
+		// Comprobamos que lanza un error al estar vacio el email
+		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+	}
+	
+	// PR09. Inicio de sesión con datos inválidos (usuario estándar, email no existente en la aplicación).
+	@Test
+	public void PR09() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "inventao@gmail.com", "123456");
+		// Comprobamos que lanza un error al estar vacio el email
+		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+	}
+	
+	// PR10. Hacer click en la opción de salir de sesión y comprobar que se redirige a la página de inicio 
+	// de sesión (Login).
+	@Test
+	public void PR10() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123456");
+		// Nos desconectamos
+		PO_PrivateView.logout(driver, "btnLogout");
+		// Comprobamos que nos dirige a /login
+		PO_PrivateView.checkElement(driver, "text", "Iniciar sesión");
+	}
+	
+	// PR11. Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
+	@Test
+	public void PR11() {
+		// Comprobamos que no hay ninguna elemento cuyo hred sea /logout
+		Boolean resultado = (new WebDriverWait(driver, PO_NavView.getTimeout()).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@href,'" + "/logout" + "')]"))));
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void PR12() {
+		
+	}
+	
+	@Test
+	public void PR13() {
+		
+	}
+	
+	@Test
+	public void PR14() {
+		
+	}
+	
+	@Test
+	public void PR15() {
+		
+	}
+	
+	@Test
+	public void PR16() {
+		
+	}
+	
+	@Test
+	public void PR17() {
+		
+	}
 }

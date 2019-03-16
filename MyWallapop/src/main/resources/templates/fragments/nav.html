@@ -68,14 +68,15 @@
 				<li class="dropdown" sec:authorize="isAuthenticated()">
 					<a id="btnGroup" href=" #"
 						class="dropdown-toggle" data-toggle="dropdown" role="button"
-						aria-haspopup="true" aria-expanded="false" style="color: black;"> <span sec:authentication="principal.username" th:inline="text"></span>
+						aria-haspopup="true" aria-expanded="false" style="color: black;"> 
+						<span id="loggedUser" sec:authentication="principal.username" th:inline="text"></span>
 						<span class="caret"></span>
 					</a>
 					  <ul id="usersdropdownMenuButton" class="dropdown-menu">
 						<li style="text-align:center" sec:authorize="hasRole('ROLE_USER')"> 
 							<span th:text="${session.balance}" style="font-size: 20pt; color: #00db00;"></span>
 						</li>
-						<li><a href="/logout" style="color: black;">  
+						<li><a id="btnLogout" href="/logout" style="color: black;">  
 							<span class="glyphicon glyphicon-log-out"></span> <span th:text="#{logout.button}"></span> 
 						</a></li>
 					</ul>
