@@ -17,13 +17,12 @@ public class OffersService {
 
 	@Autowired
 	private OffersRepository offersRepository;
-	
 
 	public void addOffer(Offer offer) {
 		offersRepository.save(offer);
 	}
 
-	public Page<Offer> getUsersOffers(Pageable pageable, User user) {
+	public Page<Offer> getUsersNotBoughtOffers(Pageable pageable, User user) {
 		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
 		offers = offersRepository.findAllByUser(pageable, user);
 		return offers;
@@ -43,9 +42,7 @@ public class OffersService {
 	
 	public Page<Offer> getOffersToBuy(Pageable pageable, User user) {
 		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
-		
 		offers = offersRepository.findOffersToBuy(pageable, user);
-
 		return offers;
 	}
 
@@ -54,8 +51,8 @@ public class OffersService {
 	}
 	
 	
-	public void setOfferBought(boolean revised, Long id) {
-		offersRepository.updateBuy(revised, id);
+	public void updateOffer(Offer offer) {
+		offersRepository.updateOffer(offer, offer.getId());
 	}
 	
 	public Offer searchOfferById(Long id) {
@@ -63,9 +60,9 @@ public class OffersService {
 		return offer;
 	}
 	
-	public Page<Offer> getUsersPurchases(Pageable pageable, User user) {
+	public Page<Offer> getUsersPurchases(Pageable pageable, String email) {
 		Page<Offer> purchases = new PageImpl<Offer>(new LinkedList<Offer>());
-		//purchases = offersRepository.findPurchasesByUserId();
+		purchases = offersRepository.findPurchasesByUsersEmail(pageable, email);
 		return purchases;
 	}
 }

@@ -154,7 +154,6 @@ public class UsersController {
 		if (usersService.buyOffer(user, offerToBuy)) {
 			session.setAttribute("balance", user.getMoney());
 			session.setAttribute("error", "Error.buy.money");
-			
 		}
 		
 		if (offerToBuy.getUser() == null)

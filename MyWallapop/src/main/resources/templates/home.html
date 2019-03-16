@@ -61,15 +61,15 @@
 									 	});
 										 /*]]>*/
 									 </script>
-									<div
-										th:if="${error!=null}" class="alert alert-danger" th:text="#{${error}}">
+									<div>
+										<span th:if="${error!=null}" class="alert alert-danger" th:text=#{${error}}>></span>
 									</div>
 							   </div>
 							</div>
 						</td>
 						<td><div>
 							<button type="button" th:id="${'chat'}"
-								class="btn btn-default" th:text="#{chat}" style="text-align: left">
+								class="btn btn-default" th:text=#{chat} style="text-align: left">
 							</button>
 							<script th:inline="javascript">
 								/*<![CDATA[*/
