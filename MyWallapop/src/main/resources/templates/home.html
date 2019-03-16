@@ -61,9 +61,7 @@
 									 	});
 										 /*]]>*/
 									 </script>
-									<div
-										th:if="${error!=null}" class="alert alert-danger" th:text="#{${error}}">
-									</div>
+									
 							   </div>
 							</div>
 						</td>
@@ -94,6 +92,10 @@
 				
 			</div>
 			<footer th:replace="fragments/pagination"/>
+			
+			<div
+				th:if="${error!=null}" class="alert alert-danger" th:text="#{${error}}">
+			</div>
 		</div>
 	</div>
 	<footer th:replace="fragments/footer" />

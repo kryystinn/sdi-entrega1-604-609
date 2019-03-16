@@ -118,11 +118,16 @@ public class UsersController {
 	}
 
 	@RequestMapping("/home")
-	public String home(Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
+	public String home(HttpSession s, Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
 		
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
+		
+		if (s.getAttribute("error") != null) {
+			model.addAttribute("error", "Error.buy.money");
+			s.removeAttribute("error");
+		}
 		
 		if (searchText != null && !searchText.isEmpty())
 			offerList = offersService.searchOffersByTitle(pageable, searchText, user);
@@ -141,6 +146,7 @@ public class UsersController {
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
 		offerList = offersService.getOffersToBuy(pageable, user); 
 		model.addAttribute("offerList", offerList.getContent());
+		
 		return "/home :: tableOffers";
 	}
 	
@@ -151,14 +157,16 @@ public class UsersController {
 		User user = usersService.getUserByEmail(email);
 		Offer offerToBuy = offersService.searchOfferById(id);
 		
+	
+		
 		if (usersService.buyOffer(user, offerToBuy)) {
-			session.setAttribute("balance", user.getMoney());
-			session.setAttribute("error", "Error.buy.money");
-			
+			session.setAttribute("balance", user.getMoney());			
 		}
 		
-		if (offerToBuy.getUser() == null)
-			session.setAttribute("error", "Error.buy.seller");
+		else
+			session.setAttribute("error", "Error.buy.money");
+//		if (offerToBuy.getUser() == null)
+//			session.setAttribute("error", "Error.buy.seller");
 		
 		return "redirect:/home";
 	}
