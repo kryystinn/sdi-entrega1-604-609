@@ -368,7 +368,7 @@ public class MyWallapopTests {
 				PO_View.getTimeout());
 		assertTrue(elementos.size() == 5);
 		// Nos desconectamos
-		PO_PrivateView.logout(driver, "btnLogout");
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 	}
 	
 	@Test

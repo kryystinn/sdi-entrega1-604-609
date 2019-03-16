@@ -23,15 +23,4 @@ public class PO_PrivateView extends PO_NavView {
 //		By boton = By.className("btn");
 //		driver.findElement(boton).click();
 //	}
-	
-	public static void logout(WebDriver driver, String btn) {
-		//Clickamos la opción principal.username.
-		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "btnGroup", getTimeout());
-		elementos.get(0).click();
-		//Esperamos a que aparezca el menú de opciones.
-		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "usersdropdownMenuButton", getTimeout());
-		//Clickamos la opción de logout
-		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", btn, getTimeout());
-		elementos.get(0).click();
-	}
 }
