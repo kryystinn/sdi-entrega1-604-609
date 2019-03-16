@@ -34,7 +34,7 @@
 				</li>
 				
 				<li sec:authorize="hasRole('ROLE_USER')" >
-					<a href="/offer/purchases" th:text=#{nav.my.purchases} style="color: black;"></a>
+					<a href="/offer/purchases" th:text="#{nav.my.purchases}" style="color: black;"></a>
 				</li>
 			</ul>  
 				</li>
@@ -76,7 +76,7 @@
 							<span th:text="${session.balance}" style="font-size: 20pt; color: #00db00;"></span>
 						</li>
 						<li><a href="/logout" style="color: black;">  
-							<span class="glyphicon glyphicon-log-out"></span> <span th:text=#{logout.button}></span> 
+							<span class="glyphicon glyphicon-log-out"></span> <span th:text="#{logout.button}"></span> 
 						</a></li>
 					</ul>
 				</li>

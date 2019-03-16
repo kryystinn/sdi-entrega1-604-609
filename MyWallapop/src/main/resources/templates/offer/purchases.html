@@ -8,19 +8,19 @@
 	<nav th:replace="fragments/nav" />
 
 	<div class="container">
-		<h3 th:text=#{purchases.list} style="text-align: left"></h3>
-		<p th:if="${purchasesList.size()>0}" th:text=#{actual.purchases} style="text-align: left"></p>
-		<p th:if="${purchasesList.size()==0}" style="font-size=20px" th:text=#{text.noItemBought}></p>
+		<h3 th:text="#{purchases.list}" style="text-align: left"></h3>
+		<p th:if="${purchasesList.size()>0}" th:text="#{actual.purchases}" style="text-align: left"></p>
+		<p th:if="${purchasesList.size()==0}" th:text="#{text.noItemBought}"></p>
 		
 		<div class="table-responsive" th:if="${purchasesList.size()>0}">
 			<table class="table table-hover" th:fragment="tablePurchases" id="tablePurchases">
 				<thead>
 					<tr>
 						<th></th>
-						<th style="text-align: left" th:text=#{table.title}></th>
-						<th style="text-align: left" th:text=#{table.description}></th>
-						<th style="text-align: left" th:text=#{table.price}></th>
-						<th style="text-align: left" th:text=#{table.email.seller}></th>
+						<th style="text-align: left" th:text="#{table.title}"></th>
+						<th style="text-align: left" th:text="#{table.description}"></th>
+						<th style="text-align: left" th:text="#{table.price}"></th>
+						<th style="text-align: left" th:text="#{table.email.seller}"></th>
 					</tr>
 				</thead>
 				<tbody>

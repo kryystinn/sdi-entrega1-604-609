@@ -6,10 +6,6 @@ html {
   min-height: 100%;
 }
 
-nav {
-	background-color: #97cbff;
-}
-
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;

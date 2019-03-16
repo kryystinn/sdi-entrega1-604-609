@@ -4,12 +4,12 @@
 <body>
 	<nav th:replace="fragments/nav"/>
 	<div class="container" style="text-align: center">
-		<h2 th:text="#{welcome.message}"></h2>
+		<h2 th:text="#{welcome.message}" style="margin-top: 30px"></h2>
 		<p>
 			<span th:text="#{home.description}"></span>
 		</p>
 		<div sec:authorize="hasRole('ROLE_USER')">
-			<h3 th:text=#{offers.general} style="text-align: left"></h3>
+			<h3 th:text="#{offers.general}" style="text-align: left"></h3>
 			<p>
 				<form class="navbar-form" action="/home">
 					<div class="form-group">
@@ -23,11 +23,11 @@
 				<table class="table table-hover" th:fragment="tableOffers" id="tableOffers" style="text-align: left; margin-top: 10px;">
 					<thead>
 						<tr>
-							<th style="text-align: left" th:text=#{table.username}></th>
-							<th style="text-align: left" th:text=#{table.title}></th>
-							<th style="text-align: left" th:text=#{table.description}></th>
-							<th style="text-align: left" th:text=#{table.date}></th>
-							<th style="text-align: left" th:text=#{table.price}></th>
+							<th style="text-align: left" th:text="#{table.username}"></th>
+							<th style="text-align: left" th:text="#{table.title}"></th>
+							<th style="text-align: left" th:text="#{table.description}"></th>
+							<th style="text-align: left" th:text="#{table.date}"></th>
+							<th style="text-align: left" th:text="#{table.price}"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -67,7 +67,7 @@
 						</td>
 						<td><div>
 							<button type="button" th:id="${'chat'}"
-								class="btn btn-default" th:text=#{chat} style="text-align: left">
+								class="btn btn-default" th:text="#{chat}" style="text-align: left">
 							</button>
 							<script th:inline="javascript">
 								/*<![CDATA[*/

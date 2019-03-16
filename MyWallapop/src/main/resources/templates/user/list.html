@@ -4,28 +4,24 @@
 <body>
 	<!-- Barra de Navegación superior -->
 	<nav th:replace="fragments/nav" />
-	<div class="container" style="">
-		<h3 th:text=#{list.users} style="text-align: left"></h3>
-		<p th:if="${usersList.size()==0}" style="font-size=20px" th:text=#{text.noUserInTheSystem}></p>
+	<div class="container">
+		<h3 th:text="#{list.users}" style="text-align: left; margin-top: 30px;"></h3>
+		<p th:if="${usersList.size()==0}" th:text=#{text.noUserInTheSystem}></p>
 		
 		<form action="/user/delete" method="post">
-			<div class="table-responsive" th:if="${usersList.size()>0}" th:fragment="tableUsers">
-				<table class="table table-hover" id="tableUsers">
+			<div class="table-responsive" th:if="${usersList.size()>0}">
+				<table class="table table-hover" id="tableUsers" th:fragment="tableUsers" style="margin-top: 10px">
 					<thead>
 						<tr>
 							<th></th>
-							<th style="text-align: center" th:text=#{table.email}></th>
-							<th style="text-align: center" th:text=#{table.name}></th>
-							<th style="text-align: center" th:text=#{table.lastName}></th>
-							<th class="col-md-1"></th>
-							<th class="col-md-1"></th>
-							<th class="col-md-1"></th>
-							<th class="col-md-1"></th>
+							<th style="text-align: center" th:text="#{table.email}"></th>
+							<th style="text-align: center" th:text="#{table.name}"></th>
+							<th style="text-align: center" th:text="#{table.lastName}"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="user : ${usersList}">
-							<td><input type="checkbox" th:value="${user.getId()}" name="checkboxes"/></td>
+							<td style="text-align: center"><input type="checkbox" th:value="${user.getId()}" name="checkboxes"/></td>
 							<td style="text-align: center" th:text="${user.email}"></td>
 							<td style="text-align: center" th:text="${user.name}"></td>
 							<td style="text-align: center" th:text="${user.lastName}"></td>
@@ -37,12 +33,12 @@
 					th:text="#{button.delete}" style="text-align: left"></button>
 					
 				<script type="text/javascript" th:inline="javascript">
-				/*<![CDATA[*/
-				function getRow(n) {
-					var row =  $('#tableUsers tr').length - 1;
-					var user = [[${usersList}]].get(row);
-				}
-				/*]]>*/
+					/*<![CDATA[*/
+					function getRow(n) {
+						var row =  $('#tableUsers tr').length - 1;
+						var user = [[${usersList}]].get(row);
+					}
+					/*]]>*/
 				</script>
 			</div>
 		</form>

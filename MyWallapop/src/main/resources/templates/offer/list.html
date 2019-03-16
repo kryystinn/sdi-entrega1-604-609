@@ -8,9 +8,9 @@
 	<nav th:replace="fragments/nav" />
 
 	<div class="container">
-		<h3 th:text=#{offers.list} style="text-align: left"></h3>
-		<p th:if="${offerList.size()>0}" th:text=#{actual.offers} style="text-align: left"></p>
-		<p th:if="${offerList.size()==0}" style="font-size=20px" th:text=#{text.noOfferAdded}></p>
+		<h3 th:text="#{offers.list}" style="text-align: left"></h3>
+		<p th:if="${offerList.size()>0}" th:text="#{actual.offers}" style="text-align: left"></p>
+		<p th:if="${offerList.size()==0}" th:text="#{text.noOfferAdded}"></p>
 
 
 		<div class="table-responsive" th:if="${offerList.size()>0}">
@@ -18,9 +18,9 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th style="text-align: left" th:text=#{table.title}></th>
-						<th style="text-align: left" th:text=#{table.description}></th>
-						<th style="text-align: left" th:text=#{table.price}></th>
+						<th style="text-align: left" th:text="#{table.title}"></th>
+						<th style="text-align: left" th:text="#{table.description}"></th>
+						<th style="text-align: left" th:text="#{table.price}"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,7 +29,7 @@
 						<td th:text="${offer.title}"></td>
 						<td th:text="${offer.description}"></td>
 						<td th:text="${offer.price}"></td>
-						<td><a th:href="${'/offer/delete/' + offer.id}" th:text=#{remove}></a></td>
+						<td><a th:href="${'/offer/delete/' + offer.id}" th:text="#{remove}"></a></td>
 					</tr>
 				</tbody>
 			</table>
