@@ -48,7 +48,7 @@ public class UsersController {
 
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String getListado(Model model) {
-		model.addAttribute("usersList", usersService.getUsers());
+		model.addAttribute("usersList", usersService.getUsersExceptAdmin());
 		return "user/list";
 	}
 

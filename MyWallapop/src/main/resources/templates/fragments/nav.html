@@ -14,11 +14,11 @@
 				<li><a href="/home" th:text=#{nav.home} style="color: black;"></a></li>
 				
 				<li id="users-menu" class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"
+					<a id="btnUserManagement" class="dropdown-toggle" data-toggle="dropdown" href="#"
 						th:text="#{nav.user.management}" style="color: black;"><span class="caret"></span>
 					</a>
-					<ul class="dropdown-menu">
-						<li><a href="/user/list" th:text="#{nav.user.management.see}"></a></li>
+					<ul id="admin-user-menu" class="dropdown-menu">
+						<li><a id="seeUsers" href="/user/list" th:text="#{nav.user.management.see}"></a></li>
 					</ul>
 				</li>
 				
@@ -34,7 +34,7 @@
 				</li>
 				
 				<li sec:authorize="hasRole('ROLE_USER')" >
-					<a href="/offer/purchases" th:text="#{nav.my.purchases}" style="color: black;"></a>
+					<a id="purchases" href="/offer/purchases" th:text="#{nav.my.purchases}" style="color: black;"></a>
 				</li>
 			</ul>  
 				</li>
@@ -72,7 +72,7 @@
 						<span id="loggedUser" sec:authentication="principal.username" th:inline="text"></span>
 						<span class="caret"></span>
 					</a>
-					  <ul id="usersdropdownMenuButton" class="dropdown-menu">
+					<ul id="usersdropdownMenuButton" class="dropdown-menu">
 						<li style="text-align:center" sec:authorize="hasRole('ROLE_USER')"> 
 							<span th:text="${session.balance}" style="font-size: 20pt; color: #00db00;"></span>
 						</li>

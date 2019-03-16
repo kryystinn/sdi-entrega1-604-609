@@ -25,7 +25,7 @@ public class PO_PrivateView extends PO_NavView {
 //	}
 	
 	public static void logout(WebDriver driver, String btn) {
-		//clickamos la opción principal.username.
+		//Clickamos la opción principal.username.
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "btnGroup", getTimeout());
 		elementos.get(0).click();
 		//Esperamos a que aparezca el menú de opciones.

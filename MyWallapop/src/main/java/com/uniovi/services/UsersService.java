@@ -23,9 +23,10 @@ public class UsersService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	
-	public List<User> getUsers() {
+	public List<User> getUsersExceptAdmin() {
 		List<User> users = new ArrayList<User>();
 		usersRepository.findAll().forEach(users::add);
+		users.remove(new User("admin@email.com", "", ""));
 		return users;
 	}
 

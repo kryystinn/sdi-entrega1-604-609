@@ -3,6 +3,7 @@ package com.uniovi.tests;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,6 +28,7 @@ import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
+import com.uniovi.tests.util.SeleniumUtils;
 
 //acceder a nuestras clases para probarlas
 import org.springframework.boot.test.context.SpringBootTest;
@@ -301,7 +304,7 @@ public class MyWallapopTests {
 		// Rellenamos el formulario de nuevo
 		PO_LoginView.fillForm(driver, "lucas@gmail.com", "a");
 		// Comprobamos que lanza un error al estar vacia la contraseña
-		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+		PO_LoginView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
 	}
 	
 	// PR08. Inicio de sesión con datos válidos (usuario estándar, email existente, pero contraseña incorrecta).
@@ -312,7 +315,7 @@ public class MyWallapopTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123");
 		// Comprobamos que lanza un error al estar vacio el email
-		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+		PO_LoginView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
 	}
 	
 	// PR09. Inicio de sesión con datos inválidos (usuario estándar, email no existente en la aplicación).
@@ -323,7 +326,7 @@ public class MyWallapopTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "inventao@gmail.com", "123456");
 		// Comprobamos que lanza un error al estar vacio el email
-		PO_RegisterView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
+		PO_LoginView.checkKey(driver, "Error.login", PO_Properties.getSPANISH());
 	}
 	
 	// PR10. Hacer click en la opción de salir de sesión y comprobar que se redirige a la página de inicio 
@@ -335,9 +338,9 @@ public class MyWallapopTests {
 		// Rellenamos el formulario con una cuenta de usuario
 		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123456");
 		// Nos desconectamos
-		PO_PrivateView.logout(driver, "btnLogout");
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 		// Comprobamos que nos dirige a /login
-		PO_PrivateView.checkElement(driver, "text", "Iniciar sesión");
+		PO_View.checkElement(driver, "text", "Iniciar sesión");
 	}
 	
 	// PR11. Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
@@ -348,33 +351,63 @@ public class MyWallapopTests {
 		assertTrue(resultado);
 	}
 	
+	// PR12. Mostrar el listado de usuarios y comprobar que se muestran todos los que existen en el
+	// sistema.
 	@Test
 	public void PR12() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que entramos en la pagina privada del admin
+		PO_View.checkElement(driver, "text", "Gestionar Usuarios");
+		// Hacemos click en la opción Ver Usuarios
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Contamos el número de filas de la tabla de usuarios
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 5);
+		// Nos desconectamos
+		PO_PrivateView.logout(driver, "btnLogout");
+	}
+	
+	@Test
+	public void PR21() {
 		
 	}
 	
 	@Test
-	public void PR13() {
+	public void PR22() {
 		
 	}
 	
-	@Test
-	public void PR14() {
-		
-	}
 	
+	// PR26. Ir a la opción de ofertas compradas del usuario y mostrar la lista. Comprobar que aparecen
+	// las ofertas que deben aparecer.	
 	@Test
-	public void PR15() {
+	public void PR26() {
+		/**
+		 * Parte 1 - Comprobar q aparecen en mis compras los objetos comprados (lucas)
+		 */
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123456");
+		// Hacemos click en Mis Ofertas
+		PO_HomeView.clickOption(driver, "offer/purchases", "id", "purchases");
+		// Contamos el número de filas de la tabla de usuarios
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 2);
 		
-	}
-	
-	@Test
-	public void PR16() {
-		
-	}
-	
-	@Test
-	public void PR17() {
-		
+		/**
+		 * Parte 2 - Comprobar que ya no aparecen en mis ofertas los objetos comprados (en este caso Pedro)
+		 */
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		// Hacemos click en Tus Ofertas
+		PO_HomeView.clickOption(driver, "offer/list", "id", "purchases");
 	}
 }

@@ -46,7 +46,7 @@ public class OffersController {
 		addOfferValidator.validate(offer, result);
 		
 		if (result.hasErrors()) {
-			model.addAttribute("usersList", usersService.getUsers());
+			model.addAttribute("usersList", usersService.getUsersExceptAdmin());
 			return "offer/add";
 		}
 

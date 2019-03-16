@@ -94,15 +94,12 @@ public class User {
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
-	
 	public Set<Offer> getOffers() {
 		return offers;
 	}
-	
 	public void setOffers(Set<Offer> offers) {
 		this.offers = offers;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -110,7 +107,6 @@ public class User {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -127,6 +123,4 @@ public class User {
 			return false;
 		return true;
 	}
-	
-	
 }
