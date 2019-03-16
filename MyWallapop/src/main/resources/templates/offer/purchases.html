@@ -7,33 +7,36 @@
 	<!-- Barra de Navegacion superior -->
 	<nav th:replace="fragments/nav" />
 
-	<div class="container" style="">
+	<div class="container">
 		<h3 th:text=#{purchases.list} style="text-align: left"></h3>
-		<p th:text=#{actual.purchases} style="text-align: left"></p>
-
-		<div class="table-responsive">
+		<p th:if="${purchasesList.size()>0}" th:text=#{actual.purchases} style="text-align: left"></p>
+		<p th:if="${purchasesList.size()==0}" style="font-size=20px" th:text=#{text.noItemBought}></p>
+		
+		<div class="table-responsive" th:if="${purchasesList.size()>0}">
 			<table class="table table-hover" th:fragment="tablePurchases" id="tablePurchases">
 				<thead>
 					<tr>
 						<th></th>
-						<th style="text-align: left" th:text=#{table.username}></th>
 						<th style="text-align: left" th:text=#{table.title}></th>
 						<th style="text-align: left" th:text=#{table.description}></th>
 						<th style="text-align: left" th:text=#{table.price}></th>
+						<th style="text-align: left" th:text=#{table.email.seller}></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="purchase : ${purchasesList}">
 						<th class="col-md-1"></th>
-						<td th:text="${offer.user.name}"></td>
-						<td th:text="${offer.title}"></td>
-						<td th:text="${offer.description}"></td>
-						<td th:text="${offer.price}"></td>
+						<td th:text="${purchase.title}"></td>
+						<td th:text="${purchase.description}"></td>
+						<td th:text="${purchase.price}"></td>
+						<td th:text="${purchase.user.email}"></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<footer th:replace="fragments/pagination"/>
+		<div th:if="${purchasesList.size()>0}">
+			<footer th:replace="fragments/pagination"/>
+		</div>
 	</div>
 	<footer th:replace="fragments/footer" />
 </body>

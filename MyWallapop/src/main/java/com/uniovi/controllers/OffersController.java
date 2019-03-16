@@ -36,8 +36,6 @@ public class OffersController {
 	@RequestMapping("/offer/add")
 	public String getOffer(Model model) {
 		model.addAttribute("offer", new Offer());
-		//model.addAttribute("usersList", usersService.getUsers());
-
 		Date myDate = new Date();
 		model.addAttribute("date", new SimpleDateFormat("yyyy-MM-dd").format(myDate));
 		return "offer/add";
@@ -63,7 +61,7 @@ public class OffersController {
 	public String getList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		Page<Offer> offerList = offersService.getUsersOffers(pageable, user);
+		Page<Offer> offerList = offersService.getUsersNotBoughtOffers(pageable, user);
 		model.addAttribute("offerList", offerList.getContent());
 		model.addAttribute("page", offerList);
 		return "offer/list";
@@ -73,7 +71,7 @@ public class OffersController {
 	public String updateList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		Page<Offer> offerList = offersService.getUsersOffers(pageable, user);
+		Page<Offer> offerList = offersService.getUsersNotBoughtOffers(pageable, user);
 		model.addAttribute("offerList", offerList.getContent());
 		model.addAttribute("page", offerList);
 		return "offer/list :: tableOffers";
@@ -89,11 +87,9 @@ public class OffersController {
 	public String getPurchases(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		Page<Offer> purchasesList = offersService.getUsersPurchases(pageable, user);
+		Page<Offer> purchasesList = offersService.getUsersPurchases(pageable, user.getEmail());
 		model.addAttribute("purchasesList", purchasesList.getContent());
 		model.addAttribute("page", purchasesList);
 		return "offer/purchases";
 	}
-	
-
 }

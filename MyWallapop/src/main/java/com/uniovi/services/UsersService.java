@@ -39,11 +39,18 @@ public class UsersService {
 	}
 
 	// Devuelve true si se puede comprar o false en caso contrario
-	public boolean buyOffer(User u, Offer oToBuy) {
-		if (u.getBalance() - oToBuy.getPrice() >= 0) {
-			offersService.setOfferBought(true, oToBuy.getId());
-			u.setBalance(u.getBalance() - oToBuy.getPrice());
-			usersRepository.updateBalance(u.getBalance(), u.getEmail());
+	public boolean buyOffer(User buyer, Offer oToBuy) {
+		if (buyer.getBalance() - oToBuy.getPrice() >= 0) {
+			oToBuy.setBought(true); // la marcamos como comprada
+			
+			oToBuy.setEmailBuyer(buyer.getEmail()); // guardamos el email del comprador
+			offersService.updateOffer(oToBuy); // la actualizamos en la base de datos
+			
+			buyer.setBalance(buyer.getBalance() - oToBuy.getPrice()); // reducimos el dinero del comprador
+			oToBuy.getUser().setBalance(oToBuy.getUser().getBalance() + oToBuy.getPrice()); // aumentamos el dinero del vendedor
+			
+			usersRepository.updateBalance(buyer.getBalance(), buyer.getEmail()); // actualizamos el balance de ambos usuarios en la bdd
+			usersRepository.updateBalance(oToBuy.getUser().getBalance(), oToBuy.getUser().getEmail()); 
 			return true;
 		}
 		return false;

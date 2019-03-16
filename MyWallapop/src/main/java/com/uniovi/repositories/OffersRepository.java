@@ -13,7 +13,7 @@ import com.uniovi.entities.User;
 
 public interface OffersRepository extends CrudRepository<Offer, Long>{
 
-	@Query("SELECT o FROM Offer o WHERE o.user = ?1 ORDER BY o.id ASC ")
+	@Query("SELECT o FROM Offer o WHERE o.user = ?1 AND o.bought = false ORDER BY o.id ASC")
 	Page<Offer> findAllByUser(Pageable pageable, User user);
 	
 	@Query("SELECT o FROM Offer o WHERE o.user <> ?1 ORDER BY o.id ASC ")
@@ -27,8 +27,11 @@ public interface OffersRepository extends CrudRepository<Offer, Long>{
 	
 	Page<Offer> findAll(Pageable pageable);
 	
+	@Query("SELECT o FROM Offer o WHERE o.bought = true AND o.emailBuyer = ?1 ORDER BY o.id ASC") 
+	Page<Offer> findPurchasesByUsersEmail(Pageable pageable, String email);
+	
 	@Modifying
 	@Transactional
-	@Query("UPDATE Offer SET bought = ?1 WHERE id = ?2")
-	void updateBuy(Boolean bought, Long id);
+	@Query("UPDATE Offer o SET o = ?1 WHERE id = ?2")
+	void updateOffer(Offer offer, Long id);
 }

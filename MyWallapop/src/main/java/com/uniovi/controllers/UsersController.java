@@ -160,7 +160,9 @@ public class UsersController {
 	
 		
 		if (usersService.buyOffer(user, offerToBuy)) {
+
 			session.setAttribute("balance", user.getMoney());			
+
 		}
 		
 		else
