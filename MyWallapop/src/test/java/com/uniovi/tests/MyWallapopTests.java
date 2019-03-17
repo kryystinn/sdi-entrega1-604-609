@@ -20,28 +20,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.uniovi.tests.pageobjects.PO_AddOfferView;
-import com.uniovi.tests.pageobjects.PO_HomeView;
-import com.uniovi.tests.pageobjects.PO_LoginView;
-import com.uniovi.tests.pageobjects.PO_NavView;
-import com.uniovi.tests.pageobjects.PO_PrivateView;
-import com.uniovi.tests.pageobjects.PO_Properties;
-import com.uniovi.tests.pageobjects.PO_RegisterView;
-import com.uniovi.tests.pageobjects.PO_View;
-import com.uniovi.tests.util.SeleniumUtils;
-
+import org.springframework.beans.factory.annotation.Autowired;
 //acceder a nuestras clases para probarlas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
+import com.uniovi.repositories.UsersRepository;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.UsersService;
-import com.uniovi.repositories.UsersRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.uniovi.tests.pageobjects.PO_AddOfferView;
+import com.uniovi.tests.pageobjects.PO_HomeView;
+import com.uniovi.tests.pageobjects.PO_LoginView;
+import com.uniovi.tests.pageobjects.PO_NavView;
+import com.uniovi.tests.pageobjects.PO_Properties;
+import com.uniovi.tests.pageobjects.PO_RegisterView;
+import com.uniovi.tests.pageobjects.PO_View;
+import com.uniovi.tests.util.SeleniumUtils;
 
 //Ordenamos las pruebas por el nombre del método
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -547,7 +543,7 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "Añadir oferta");
 		
 		// Rellenamos el formulario con datos válidos:
-		PO_AddOfferView.fillForm(driver, " ", "Vendo batidora", "2019-04-22", "25.0");
+		//PO_AddOfferView.fillForm(driver, " ", "Vendo batidora", "2019-04-22", "25.0");
 		
 		//PO_View.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 		
@@ -830,6 +826,43 @@ public class MyWallapopTests {
 		PO_NavView.changeIdiom(driver, "btnSpanish");
 		// Comprobamos que está en inglés:
 		SeleniumUtils.textoPresentePagina(driver, "Precio");
+	}
+	
+	
+	// PR28. Intentar acceder sin estar autenticado a la opción de listado de usuarios del administrador. Se
+	// deberá volver al formulario de login.
+	@Test
+	public void PR28() {
+		// Intentamos acceder sin estar logeados:
+		driver.get(URL + "/user/list");
+		// Comprobamos que nos devuelve a login:
+		PO_View.checkElement(driver, "text", "Iniciar sesión");
+	}
+	
+	// PR29. Intentar acceder sin estar autenticado a la opción de listado de ofertas propias de un usuario
+	// estándar. Se deberá volver al formulario de login.
+	@Test
+	public void PR29() {
+		// Intentamos acceder sin estar logeados:
+		driver.get(URL + "/offer/list");
+		// Comprobamos que nos devuelve a login:
+		PO_View.checkElement(driver, "text", "Iniciar sesión");
+	}
+	
+	// PR30. Estando autenticado como usuario estándar intentar acceder a la opción de listado de
+	// usuarios del administrador. Se deberá indicar un mensaje de acción prohibida.
+	@Test
+	public void PR30() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		// Comprobamos que estamos en la página principal:
+		SeleniumUtils.textoPresentePagina(driver, "Ofertas");
+		// Intentamos acceder sin tener permisos:
+		driver.get(URL + "/user/list");
+		// Comprobamos que nos da un error:
+		SeleniumUtils.textoPresentePagina(driver, "HTTP Status 403 – Forbidden");
 	}
 	
 	// PR39. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).
