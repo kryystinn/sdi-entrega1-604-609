@@ -29,7 +29,7 @@
 						<td th:text="${offer.title}"></td>
 						<td th:text="${offer.description}"></td>
 						<td th:text="${offer.price}"></td>
-						<td><a th:href="${'/offer/delete/' + offer.id}" th:text="#{remove}"></a></td>
+						<td><a th:id="${'del' + offer.title}" th:href="${'/offer/delete/' + offer.id}" th:text="#{remove}"></a></td>
 					</tr>
 				</tbody>
 			</table>

@@ -504,7 +504,7 @@ public class MyWallapopTests {
 	public void PR16() {
 		// Vamos al formulario de login:
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-		// Rellenamos el formulario con la cuenta administrador:
+		// Rellenamos el formulario con una cuenta estándar:
 		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
 		// Comprobamos que entramos en la página principal del user (home):
 		PO_View.checkElement(driver, "text", "Ofertas");
@@ -537,7 +537,7 @@ public class MyWallapopTests {
 	public void PR17() {
 		// Vamos al formulario de login:
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-		// Rellenamos el formulario con la cuenta administrador:
+		// Rellenamos el formulario con una cuenta estándar:
 		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
 		// Comprobamos que entramos en la página principal del user (home):
 		PO_View.checkElement(driver, "text", "Ofertas");
@@ -562,11 +562,11 @@ public class MyWallapopTests {
 	public void PR18() {
 		// Vamos al formulario de login:
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-		// Rellenamos el formulario con la cuenta administrador:
+		// Rellenamos el formulario con una cuenta estándar:
 		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
 		// Comprobamos que entramos en la página principal del user (home):
 		PO_View.checkElement(driver, "text", "Ofertas");
-		// Hacemos click en la opción Añadir oferta:
+		// Hacemos click en la opción Tus Ofertas:
 		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
 		// Comprobamos que entramos en la página de Tus Ofertas:
 		PO_View.checkElement(driver, "text", "Tus ofertas");
@@ -579,6 +579,77 @@ public class MyWallapopTests {
 		SeleniumUtils.textoPresentePagina(driver, "Funda móvil");
 		SeleniumUtils.textoPresentePagina(driver, "Teclado básico");
 		
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	
+	// PR19. Ir a la lista de ofertas, borrar la primera oferta de la lista, comprobar que la lista se actualiza y
+	// que la oferta desaparece.
+	@Test
+	public void PR19() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta estándar:
+		PO_LoginView.fillForm(driver, "pelayo@gmail.com", "123456");
+		// Comprobamos que entramos en la página principal del user (home):
+		PO_View.checkElement(driver, "text", "Ofertas");
+		// Hacemos click en la opción Tus Ofertas:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
+		// Comprobamos que entramos en la página de Tus Ofertas:
+		PO_View.checkElement(driver, "text", "Tus ofertas");
+		// Inicialmente Pelayo tenía 3 ofertas:
+		List<WebElement> ofertas = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertas.size() == 3);
+		
+		// Eliminamos la primera oferta:
+		// Que se corresponde con unos cascos:
+		SeleniumUtils.textoPresentePagina(driver, "Cascos con micro");
+		driver.findElement(By.id("delCascos con micro")).click();
+		
+		// Comprobamos que disminuye una oferta en la lista:
+		List<WebElement> ofertasUpdate = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertasUpdate.size() == 2);
+		// Comprobamos que era el elemento que eliminamos:
+		SeleniumUtils.textoNoPresentePagina(driver, "Cascos con micro");
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y
+	// que la oferta desaparece.
+	@Test
+	public void PR20() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta estándar:
+		PO_LoginView.fillForm(driver, "pelayo@gmail.com", "123456");
+		// Comprobamos que entramos en la página principal del user (home):
+		PO_View.checkElement(driver, "text", "Ofertas");
+		// Hacemos click en la opción Tus Ofertas:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
+		// Comprobamos que entramos en la página de Tus Ofertas:
+		PO_View.checkElement(driver, "text", "Tus ofertas");
+		// Inicialmente Pelayo tenía 3 ofertas:
+		List<WebElement> ofertas = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertas.size() == 3);
+		
+		// Eliminamos la última oferta:
+		// Que se corresponde con un libro:
+		SeleniumUtils.textoPresentePagina(driver, "Libro");
+		driver.findElement(By.id("delLibro")).click();
+		
+		// Comprobamos que disminuye una oferta en la lista:
+		List<WebElement> ofertasUpdate = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertasUpdate.size() == 2);
+		// Comprobamos que era el elemento que eliminamos:
+		SeleniumUtils.textoNoPresentePagina(driver, "Libro");
 		
 		// Nos desconectamos
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
