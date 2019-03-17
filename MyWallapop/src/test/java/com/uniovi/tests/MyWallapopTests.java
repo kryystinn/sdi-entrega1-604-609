@@ -141,7 +141,7 @@ public class MyWallapopTests {
 				add(offer1);
 				add(offer2);
 				add(offer3);
-				add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real, pero es el original...", "2019-01-21", 83.0, user2));
+				add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real, pero no es el original...", "2019-01-21", 83.0, user2));
 				add(new Offer("Teclado con luces", "Gaming", "2019-04-20", 20.0, user2));
 			}
 		};

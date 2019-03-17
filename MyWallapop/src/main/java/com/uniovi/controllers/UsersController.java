@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,9 @@ import com.uniovi.validators.SignUpFormValidator;
 
 @Controller
 public class UsersController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
+	
 	@Autowired
 	private UsersService usersService;
 
@@ -52,47 +56,16 @@ public class UsersController {
 		return "user/list";
 	}
 
-	@RequestMapping(value = "/user/add")
-	public String getUser(Model model) {
-		model.addAttribute("rolesList", rolesService.getRoles());
-		return "user/add";
-	}
-
-	@RequestMapping(value = "/user/add", method = RequestMethod.POST)
-	public String setUser(@ModelAttribute User user) {
-		usersService.addUser(user);
-		return "redirect:/user/list";
-	}
-
-	@RequestMapping("/user/details/{id}")
-	public String getDetail(Model model, @PathVariable Long id) {
-		model.addAttribute("user", usersService.getUser(id));
-		return "user/details";
-	}
-
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam(value="checkboxes", required = false) List<String> idList) {
 		
 		if (idList != null) {
 			for (String i : idList) {
+				logger.info("El usuario "+usersService.getUser(Long.parseLong(i))+" ha sido borrado del sistema por un administrador.");
 				usersService.deleteUser(Long.parseLong(i));
 			}
 		}
 		return "redirect:/user/list";
-	}
-
-	@RequestMapping(value = "/user/edit")
-	public String getEdit(Model model, @PathVariable Long id) {
-		User user = usersService.getUser(id);
-		model.addAttribute("user", user);
-		return "user/edit";
-	}
-
-	@RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
-	public String setEdit(Model model, @PathVariable Long id, @ModelAttribute User user) {
-		user.setId(id);
-		usersService.addUser(user);
-		return "redirect:/user/details/" + id;
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
@@ -104,11 +77,14 @@ public class UsersController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(@Validated User user, BindingResult result, Model model) {
 		signUpFormValidator.validate(user, result);
-		if (result.hasErrors())
+		if (result.hasErrors()) {
+			logger.warn("Error al intentar registrarse en el sistema.");
 			return "signup";
+		}
 		user.setRole(rolesService.getRoles()[0]);
 		usersService.addUser(user);
 		securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
+		logger.info("Nuevo usuario en el sistema: "+user.getEmail());
 		return "redirect:home";
 	}
 
@@ -147,26 +123,5 @@ public class UsersController {
 		model.addAttribute("offerList", offerList.getContent());
 		
 		return "/home :: tableOffers";
-	}
-	
-	
-	@RequestMapping(value="/offer/{id}/buy", method=RequestMethod.GET)
-	public String setBoughtTrue(HttpSession session, Model model, Principal principal, @PathVariable Long id){
-		String email = principal.getName();
-		User user = usersService.getUserByEmail(email);
-		Offer offerToBuy = offersService.searchOfferById(id);
-		
-		if (usersService.buyOffer(user, offerToBuy))
-			session.setAttribute("balance", user.getMoney());	
-		else {
-			session.setAttribute("error", "Error.buy.money");
-			return "/home :: tableOffers";
-		}
-		return "redirect:/home";
-	}
-	
-	@RequestMapping(value = "/admin/logger", method = RequestMethod.GET)
-	public String getLogger(Model model) {
-		return "admin/logger";
 	}
 }

@@ -61,37 +61,14 @@
 									 	});
 										 /*]]>*/
 									 </script>
-							   </div>
-							</div>
-						</td>
-						<td><div>
-							<button type="button" th:id="${'chat'}"
-								class="btn btn-default" th:text="#{chat}" style="text-align: left">
-							</button>
-							<script th:inline="javascript">
-								/*<![CDATA[*/
-								 $( "#chatButton[[${offer.id}]]" ).click(function() {
-								 	$.get( "/offer/[[${offer.id}]]/chat", function( data ) {
-									 	var numberPage = [[${param.page}]];
-									 	var urlUpdate = '/chat';
-									 	if ( numberPage != null ){
-									 		urlUpdate += "?page="+numberPage[0];
-									 	}
-										$("#tableOffers").load(urlUpdate);
-									 	});
-								 }); 
-								 /*]]>*/
-							</script>
-
-							</div>
-						
+							   	</div>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
-				
 			</div>
 			<footer th:replace="fragments/pagination"/>
-			
 			<div
 				th:if="${error!=null}" class="alert alert-danger" th:text="#{${error}}">
 			</div>
