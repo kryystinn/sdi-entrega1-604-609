@@ -13,7 +13,7 @@ import com.uniovi.entities.User;
 
 public interface OffersRepository extends CrudRepository<Offer, Long>{
 
-	@Query("SELECT o FROM Offer o WHERE o.user = ?1 AND o.bought = false ORDER BY o.id ASC")
+	@Query("SELECT o FROM Offer o WHERE o.user = ?1 AND o.bought = false ORDER BY o.title ASC")
 	Page<Offer> findAllByUser(Pageable pageable, User user);
 	
 	@Query("SELECT o FROM Offer o WHERE o.user <> ?1 ORDER BY o.id ASC ")

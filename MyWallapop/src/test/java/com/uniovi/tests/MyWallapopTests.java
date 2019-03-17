@@ -635,16 +635,16 @@ public class MyWallapopTests {
 		assertTrue(ofertas.size() == 3);
 		
 		// Eliminamos la última oferta:
-		// Que se corresponde con un libro:
+		// Que se corresponde con un teclado:
 		SeleniumUtils.textoPresentePagina(driver, "Libro");
-		driver.findElement(By.id("delLibro")).click();
+		driver.findElement(By.id("delTeclado")).click();
 		
 		// Comprobamos que disminuye una oferta en la lista:
 		List<WebElement> ofertasUpdate = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
 				PO_View.getTimeout());
 		assertTrue(ofertasUpdate.size() == 2);
 		// Comprobamos que era el elemento que eliminamos:
-		SeleniumUtils.textoNoPresentePagina(driver, "Libro");
+		SeleniumUtils.textoNoPresentePagina(driver, "Teclado");
 		
 		// Nos desconectamos
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
