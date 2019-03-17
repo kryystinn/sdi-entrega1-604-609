@@ -110,7 +110,7 @@ public class UsersController {
 		
 		model.addAttribute("offerList", offerList.getContent());
 		model.addAttribute("page", offerList);
-		return "/home";
+		return "home";
 	}
 	
 	@RequestMapping("/home/update")
@@ -121,6 +121,6 @@ public class UsersController {
 		offerList = offersService.getOffersToBuy(pageable, user); 
 		model.addAttribute("offerList", offerList.getContent());
 		
-		return "/home :: tableOffers";
+		return "home :: tableOffers";
 	}
 }
