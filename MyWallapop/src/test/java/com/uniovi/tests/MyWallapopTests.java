@@ -53,8 +53,8 @@ public class MyWallapopTests {
 	private UsersRepository usersRepository;
 
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
-	//static String Geckdriver024 = "C:\\Users\\crist\\Documents\\geckodriver024win64.exe";
+	//static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
+	static String Geckdriver024 = "C:\\Users\\crist\\Documents\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
 	static String URL = "http://localhost:8090";
@@ -956,7 +956,7 @@ public class MyWallapopTests {
 		// Intentamos acceder sin tener permisos:
 		driver.get(URL + "/user/list");
 		// Comprobamos que nos da un error:
-		SeleniumUtils.textoPresentePagina(driver, "HTTP Status 403 – Forbidden");
+		SeleniumUtils.textoPresentePagina(driver, "Forbidden");
 	}
 	
 	// PR39. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).
