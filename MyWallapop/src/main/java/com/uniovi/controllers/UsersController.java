@@ -166,4 +166,9 @@ public class UsersController {
 //			session.setAttribute("error", "Error.buy.seller");
 		return "redirect:/home";
 	}
+	
+	@RequestMapping(value = "/admin/logger", method = RequestMethod.GET)
+	public String getLogger(Model model) {
+		return "admin/logger";
+	}
 }

@@ -36,6 +36,10 @@
 				<li sec:authorize="hasRole('ROLE_USER')" >
 					<a id="purchases" href="/offer/purchases" th:text="#{nav.my.purchases}" style="color: black;"></a>
 				</li>
+				
+				<li sec:authorize="hasRole('ROLE_ADMIN')">
+					<a id="logger" href="/admin/logger" th:text="#{nav.admin.logger}" style="color: black;"></a>
+				</li>
 			</ul>  
 				</li>
 			<ul class="nav navbar-nav navbar-right">
