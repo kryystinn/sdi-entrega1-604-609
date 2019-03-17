@@ -21,6 +21,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.uniovi.tests.pageobjects.PO_AddOfferView;
 import com.uniovi.tests.pageobjects.PO_HomeView;
 import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_NavView;
@@ -235,17 +236,17 @@ public class MyWallapopTests {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		// Rellenamos el formulario
 		PO_RegisterView.fillForm(driver, " ", "Jose", "Perez Vazquez", "123456", "123456");
-		// Comprobamos el error de email corto
+		// Comprobamos el error de email vacío
 		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 		
 		// Rellenamos el formulario de nuevo
 		PO_RegisterView.fillForm(driver, "jose@email.com", " ", "Perez Vazquez", "123456", "123456");
-		// Comprobamos el error de nombre corto
+		// Comprobamos el error de nombre vacío
 		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 		
 		// Rellenamos el formulario de nuevo
 		PO_RegisterView.fillForm(driver, "jose@email.com", "Jose", " ", "123456", "123456");
-		// Comprobamos el error de apellidos cortos
+		// Comprobamos el error de apellidos vacíos
 		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 		
 	}
@@ -497,6 +498,94 @@ public class MyWallapopTests {
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 	}
 	
+	// PR16. Ir al formulario de alta de oferta, rellenarla con datos válidos y pulsar el botón Submit.
+	// Comprobar que la oferta sale en el listado de ofertas de dicho usuario.
+	@Test
+	public void PR16() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
+		// Comprobamos que entramos en la página principal del user (home):
+		PO_View.checkElement(driver, "text", "Ofertas");
+		// Hacemos click en la opción Añadir oferta:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "addOffer");
+		// Comprobamos que entramos en la página de añadir una oferta:
+		PO_View.checkElement(driver, "text", "Añadir oferta");
+		
+		// Rellenamos el formulario con datos válidos:
+		PO_AddOfferView.fillForm(driver, "Chancla de goma", "Perdí la otra, por eso la vendo", "2019-04-22", "5.0");
+
+		// Comprobamos que al pulsar el botón nos redirige a Tus ofertas:
+		PO_View.checkElement(driver, "text", "Tus ofertas");
+		
+		// Comprobamos que la oferta que acabamos de crear se encuentra entre las ofertas de Marta:
+		// Inicialmente tenía una sola oferta a la venta, ahora debería de tener 2:
+		List<WebElement> ofertas = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertas.size() == 2);
+		// Comprobamos que la chancla se halla entre ellas:
+		SeleniumUtils.textoPresentePagina(driver, "Chancla de goma");
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	// PR17. Ir al formulario de alta de oferta, rellenarla con datos inválidos (campo título vacío) y pulsar
+	// el botón Submit. Comprobar que se muestra el mensaje de campo obligatorio
+	@Test
+	public void PR17() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
+		// Comprobamos que entramos en la página principal del user (home):
+		PO_View.checkElement(driver, "text", "Ofertas");
+		// Hacemos click en la opción Añadir oferta:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "addOffer");
+		// Comprobamos que entramos en la página de añadir una oferta:
+		PO_View.checkElement(driver, "text", "Añadir oferta");
+		
+		// Rellenamos el formulario con datos válidos:
+		PO_AddOfferView.fillForm(driver, " ", "Vendo batidora", "2019-04-22", "25.0");
+		
+		//PO_View.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
+		
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se muestran todas los que
+	// existen para este usuario. 
+	@Test
+	public void PR18() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		// Comprobamos que entramos en la página principal del user (home):
+		PO_View.checkElement(driver, "text", "Ofertas");
+		// Hacemos click en la opción Añadir oferta:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
+		// Comprobamos que entramos en la página de Tus Ofertas:
+		PO_View.checkElement(driver, "text", "Tus ofertas");
+		// Inicialmente Pedro tenía dos ofertas a la venta, la funda móvil y el teclado básico, por lo que:
+		List<WebElement> ofertas = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(ofertas.size() == 2);
+		
+		// Comprobamos las ofertas son las mencionadas:
+		SeleniumUtils.textoPresentePagina(driver, "Funda móvil");
+		SeleniumUtils.textoPresentePagina(driver, "Teclado básico");
+		
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+
+
+	
 	
 	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la página que
 	// corresponde con el listado de las ofertas existentes en el sistema
@@ -507,10 +596,8 @@ public class MyWallapopTests {
 		// Rellenamos el formulario con una cuenta de usuario
 		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
 		// Hacemos click en el boton search
-		SeleniumUtils.esperarSegundos(driver, 5);
 		By boton = By.className("btn");
 		driver.findElement(boton).click();
-		SeleniumUtils.esperarSegundos(driver, 5);
 		
 		/**
 		 * Comprobamos que están todas las ofertas del sistema (son 19 menos las 3 de María que no se muestran 16)
