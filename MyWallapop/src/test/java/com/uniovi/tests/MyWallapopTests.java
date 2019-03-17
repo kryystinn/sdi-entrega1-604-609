@@ -56,7 +56,8 @@ public class MyWallapopTests {
 	private UsersRepository usersRepository;
 
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
+	//static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
+	static String Geckdriver024 = "C:\\Users\\crist\\Documents\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
 	static String URL = "http://localhost:8090";
@@ -226,25 +227,30 @@ public class MyWallapopTests {
 		// Comprobamos que entramos en home (un elemento especifico de home para Users como Ofertas)
 		PO_View.checkElement(driver, "text", "Ofertas");
 	}
-
-	// PR02. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).
+	
+	// PR02. Registro de usuario con datos inválidos (email vacío, nombre vacío, apellidos vacíos).
 	@Test
 	public void PR02() {
 		// Vamos al formulario de registro
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		// Rellenamos el formulario
-		PO_RegisterView.fillForm(driver, "ola", "Jose", "Perez Vazquez", "123456", "123456");
+		PO_RegisterView.fillForm(driver, " ", "Jose", "Perez Vazquez", "123456", "123456");
 		// Comprobamos el error de email corto
-		PO_RegisterView.checkKey(driver, "Error.signup.email.length", PO_Properties.getSPANISH());
+		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
+		
 		// Rellenamos el formulario de nuevo
-		PO_RegisterView.fillForm(driver, "jose@email.com", "c", "Perez Vazquez", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "jose@email.com", " ", "Perez Vazquez", "123456", "123456");
 		// Comprobamos el error de nombre corto
-		PO_RegisterView.checkKey(driver, "Error.signup.name.length", PO_Properties.getSPANISH());
+		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
+		
 		// Rellenamos el formulario de nuevo
-		PO_RegisterView.fillForm(driver, "jose@email.com", "Jose", "P", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "jose@email.com", "Jose", " ", "123456", "123456");
 		// Comprobamos el error de apellidos cortos
-		PO_RegisterView.checkKey(driver, "Error.signup.lastName.length", PO_Properties.getSPANISH());
+		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
+		
 	}
+
+
 
 	// PR03. Registro de usuario con datos inválidos (repetición de contraseña inválida).
 	@Test
@@ -346,7 +352,7 @@ public class MyWallapopTests {
 	// PR11. Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
 	@Test
 	public void PR11() {
-		// Comprobamos que no hay ninguna elemento cuyo href sea /logout
+		// Comprobamos que no hay ningún elemento cuyo href sea /logout
 		Boolean resultado = (new WebDriverWait(driver, PO_NavView.getTimeout()).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@href,'" + "/logout" + "')]"))));
 		assertTrue(resultado);
 	}
@@ -371,6 +377,127 @@ public class MyWallapopTests {
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 	}
 	
+	// PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista, comprobar que la lista se actualiza
+	// y dicho usuario desaparece.
+	@Test
+	public void PR13() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que entramos en la pagina privada del admin:
+		PO_View.checkElement(driver, "text", "Gestionar Usuarios");
+		// Hacemos click en la opción Ver Usuarios
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Contamos el número de filas de la tabla de usuarios
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 5);
+		
+		// Comprobamos que al principio el email del primer usuario de la lista se encuentra presente:
+		SeleniumUtils.textoPresentePagina(driver, "pedro@gmail.com");
+		
+		// Marcamos el checkbox del primer usuario de la lista, que se corresponde con Pedro:
+		driver.findElement(By.id("cbpedro@gmail.com")).click();
+		// Eliminamos este usuario marcado:
+		driver.findElement(By.id("deleteButton")).click();
+		
+		//Comprobamos que hay una fila menos de la tabla de usuarios:
+		List<WebElement> elementosUpdated = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementosUpdated.size() == 4);
+		
+		//Comprobamos que Pedro no se encuentra entre la lista de usuarios:
+		SeleniumUtils.textoNoPresentePagina(driver, "pedro@gmail.com");
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	// PR14. Ir a la lista de usuarios, borrar el último usuario de la lista, comprobar que la lista se actualiza
+	// y dicho usuario desaparece.
+	@Test
+	public void PR14() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que entramos en la pagina privada del admin:
+		PO_View.checkElement(driver, "text", "Gestionar Usuarios");
+		// Hacemos click en la opción Ver Usuarios
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Contamos el número de filas de la tabla de usuarios
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 5);
+		
+		//Comprobamos que al principio el email del último usuario de la lista está presente:
+		SeleniumUtils.textoPresentePagina(driver, "pelayo@gmail.com");
+		
+		// Marcamos el checkbox del último usuario de la lista, que se corresponde con Pelayo:
+		driver.findElement(By.id("cbpelayo@gmail.com")).click();
+		
+		// Eliminamos este usuario marcado:
+		driver.findElement(By.id("deleteButton")).click();
+		
+		//Comprobamos que hay una fila menos de la tabla de usuarios:
+		List<WebElement> elementosUpdated = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementosUpdated.size() == 4);
+		
+		//Comprobamos que Pelayo no se encuentra entre la lista de usuarios:
+		SeleniumUtils.textoNoPresentePagina(driver, "pelayo@gmail.com");
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	// PR15. Ir a la lista de usuarios, borrar 3 usuarios, comprobar que la lista se actualiza y dichos
+	// usuarios desaparecen.
+	@Test
+	public void PR15() {
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta administrador:
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que entramos en la pagina privada del admin:
+		PO_View.checkElement(driver, "text", "Gestionar Usuarios");
+		// Hacemos click en la opción Ver Usuarios
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Contamos el número de filas de la tabla de usuarios
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 5);
+		
+		//Comprobamos que al principio el email de los 3 usuarios están presentes:
+		SeleniumUtils.textoPresentePagina(driver, "lucas@gmail.com");
+		SeleniumUtils.textoPresentePagina(driver, "maria@gmail.com");
+		SeleniumUtils.textoPresentePagina(driver, "marta@gmail.com");
+		
+		
+		// Marcamos el checkbox de los usuarios, que se corresponden con Lucas, María y Marta:
+		driver.findElement(By.id("cblucas@gmail.com")).click();
+		driver.findElement(By.id("cbmaria@gmail.com")).click();
+		driver.findElement(By.id("cbmarta@gmail.com")).click();
+		
+		// Eliminamos los usuarios marcados:
+		driver.findElement(By.id("deleteButton")).click();
+		
+		//Comprobamos que hay 3 filas menos de la tabla de usuarios:
+		List<WebElement> elementosUpdated = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementosUpdated.size() == 2);
+		
+		//Comprobamos que Lucas, María y Marta no se encuentran entre la lista de usuarios:
+		SeleniumUtils.textoNoPresentePagina(driver, "lucas@gmail.com");
+		SeleniumUtils.textoNoPresentePagina(driver, "maria@gmail.com");
+		SeleniumUtils.textoNoPresentePagina(driver, "marta@gmail.com");
+		
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+	}
+	
+	
 	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la página que
 	// corresponde con el listado de las ofertas existentes en el sistema
 	@Test
@@ -386,16 +513,16 @@ public class MyWallapopTests {
 		SeleniumUtils.esperarSegundos(driver, 5);
 		
 		/**
-		 * Comprobamos que estan todas las ofertas del sistema (son 19 menos las 3 de maria que no se muestran 16)
+		 * Comprobamos que están todas las ofertas del sistema (son 19 menos las 3 de María que no se muestran 16)
 		 */
 		int numberOfOffers = 0;
-		// Primera pagina
+		// Primera página
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
 				PO_View.getTimeout());
 		numberOfOffers += elementos.size();
-		// Recorremos las pagina 2, 3 y 4 de la lista
+		// Recorremos las página 2, 3 y 4 de la lista
 		for (int i = 2; i<5; i++) {
-			// Esperamos a que se muestren los enlaces de paginacion
+			// Esperamos a que se muestren los enlaces de paginación
 			elementos = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
 			elementos.get(i).click();
 			elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
@@ -455,9 +582,30 @@ public class MyWallapopTests {
 		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
 		// Hacemos click en Tus Ofertas
 		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
-		// Comprobamos que ya no las puede ver (marta al inicializar la bdd, tiene 3 ofertas, 2 compradas y 1 en venta)
+		// Comprobamos que ya no las puede ver (marta al inicializar la bbdd, tiene 3 ofertas, 2 compradas y 1 en venta)
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
 				PO_View.getTimeout());
 		assertTrue(elementos.size() == 1);
+	}
+	
+	// PR39. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).
+	@Test
+	public void PR39() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_RegisterView.fillForm(driver, "ola", "Jose", "Perez Vazquez", "123456", "123456");
+		// Comprobamos el error de email corto
+		PO_RegisterView.checkKey(driver, "Error.signup.email.length", PO_Properties.getSPANISH());
+		
+		// Rellenamos el formulario de nuevo
+		PO_RegisterView.fillForm(driver, "jose@email.com", "c", "Perez Vazquez", "123456", "123456");
+		// Comprobamos el error de nombre corto
+		PO_RegisterView.checkKey(driver, "Error.signup.name.length", PO_Properties.getSPANISH());
+		
+		// Rellenamos el formulario de nuevo
+		PO_RegisterView.fillForm(driver, "jose@email.com", "Jose", "P", "123456", "123456");
+		// Comprobamos el error de apellidos cortos
+		PO_RegisterView.checkKey(driver, "Error.signup.lastName.length", PO_Properties.getSPANISH());
 	}
 }
