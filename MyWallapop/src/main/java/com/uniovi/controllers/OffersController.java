@@ -112,7 +112,7 @@ public class OffersController {
 		else {
 			session.setAttribute("error", "Error.buy.money");
 			logger.warn("El usuario "+user.getEmail()+" no ha podido comprar la oferta " + offerToBuy.getTitle() +".");
-			return "/home :: tableOffers";
+			return "home :: tableOffers";
 		}
 		logger.info("El usuario "+user.getEmail()+" ha comprado la oferta " + offerToBuy.getTitle() + " correctamente.");
 		return "redirect:/home";
