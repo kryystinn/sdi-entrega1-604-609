@@ -64,9 +64,9 @@ public class PO_NavView extends PO_View {
 		// Hacemos click en la opción Ver Usuarios
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuButtonId, PO_NavView.getTimeout());
 		elementos.get(0).click();
-		//Esperamos a que aparezca el menú de opciones.
+		// Esperamos a que aparezca el menú de opciones.
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuId, PO_NavView.getTimeout());
-		//Clickamos la opción deseada
+		// Clickamos la opción deseada
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", optionId, PO_NavView.getTimeout());
 		elementos.get(0).click();
 	}

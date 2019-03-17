@@ -23,13 +23,13 @@
 				</li>
 				
 				<li id="offers-menu" class="dropdown" sec:authorize="hasRole('ROLE_USER')">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color: black;">
+					<a id="btnOffersManagement" class="dropdown-toggle" data-toggle="dropdown" href="#" style="color: black;">
 						<span th:text="#{nav.offer.management}"></span>
 						<span class="caret"></span>
 					</a>
-					<ul class="dropdown-menu">
+					<ul id="offersDropdownMenu" class="dropdown-menu">
 						<li><a href="/offer/add" th:text="#{nav.offer.management.add}"></a></li>
-						<li><a href="/offer/list" th:text="#{nav.offer.management.see}"></a></li>
+						<li><a id="offersList" href="/offer/list" th:text="#{nav.offer.management.see}"></a></li>
 					</ul>
 				</li>
 				

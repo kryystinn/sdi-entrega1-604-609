@@ -121,7 +121,6 @@ public class UsersController {
 	public String home(HttpSession s, Model model, Pageable pageable, Principal principal, @RequestParam(value = "", required = false) String searchText) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		
 		Page<Offer> offerList = new PageImpl<Offer>(new LinkedList<Offer>());
 		
 		if (s.getAttribute("error") != null) {
@@ -157,21 +156,14 @@ public class UsersController {
 		User user = usersService.getUserByEmail(email);
 		Offer offerToBuy = offersService.searchOfferById(id);
 		
-	
-		
-		if (usersService.buyOffer(user, offerToBuy)) {
-
-			session.setAttribute("balance", user.getMoney());			
-
-		}
-		
+		if (usersService.buyOffer(user, offerToBuy))
+			session.setAttribute("balance", user.getMoney());	
 		else {
 			session.setAttribute("error", "Error.buy.money");
 			return "/home :: tableOffers";
 		}
 //		if (offerToBuy.getUser() == null)
 //			session.setAttribute("error", "Error.buy.seller");
-		
 		return "redirect:/home";
 	}
 }

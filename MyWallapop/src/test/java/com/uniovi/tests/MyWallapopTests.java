@@ -346,7 +346,7 @@ public class MyWallapopTests {
 	// PR11. Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
 	@Test
 	public void PR11() {
-		// Comprobamos que no hay ninguna elemento cuyo hred sea /logout
+		// Comprobamos que no hay ninguna elemento cuyo href sea /logout
 		Boolean resultado = (new WebDriverWait(driver, PO_NavView.getTimeout()).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@href,'" + "/logout" + "')]"))));
 		assertTrue(resultado);
 	}
@@ -371,13 +371,57 @@ public class MyWallapopTests {
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 	}
 	
+	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la página que
+	// corresponde con el listado de las ofertas existentes en el sistema
 	@Test
 	public void PR21() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
+		// Hacemos click en el boton search
+		SeleniumUtils.esperarSegundos(driver, 5);
+		By boton = By.className("btn");
+		driver.findElement(boton).click();
+		SeleniumUtils.esperarSegundos(driver, 5);
 		
+		/**
+		 * Comprobamos que estan todas las ofertas del sistema (son 19 menos las 3 de maria que no se muestran 16)
+		 */
+		int numberOfOffers = 0;
+		// Primera pagina
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		numberOfOffers += elementos.size();
+		// Recorremos las pagina 2, 3 y 4 de la lista
+		for (int i = 2; i<5; i++) {
+			// Esperamos a que se muestren los enlaces de paginacion
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
+			elementos.get(i).click();
+			elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+					PO_View.getTimeout());
+			numberOfOffers += elementos.size();
+		}
+		assertTrue(numberOfOffers == 16);
 	}
 	
+	// PR22. Hacer una búsqueda escribiendo en el campo un texto que no exista y comprobar que se
+	// muestra la página que corresponde, con la lista de ofertas vacía.
 	@Test
 	public void PR22() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
+		// Introducimos una cadena en el campo de busqueda
+		WebElement searchInput = driver.findElement(By.name("searchText"));
+		searchInput.click();
+		searchInput.clear();
+		searchInput.sendKeys("cadena imposible de hacer coincidencias");
+		// Hacemos click en el boton search
+		By boton = By.className("btn");
+		driver.findElement(boton).click();
+		// Comprobamos que la tabla está vacía
 		
 	}
 	
@@ -387,27 +431,33 @@ public class MyWallapopTests {
 	@Test
 	public void PR26() {
 		/**
-		 * Parte 1 - Comprobar q aparecen en mis compras los objetos comprados (lucas)
+		 * Parte 1 - Comprobar q aparecen en mis compras los objetos comprados (2 por defecto en maria)
 		 */
 		// Vamos al formulario de login.
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
 		// Rellenamos el formulario con una cuenta de usuario
-		PO_LoginView.fillForm(driver, "lucas@gmail.com", "123456");
+		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
 		// Hacemos click en Mis Ofertas
 		PO_HomeView.clickOption(driver, "offer/purchases", "id", "purchases");
-		// Contamos el número de filas de la tabla de usuarios
+		// Contamos el número de filas de la lista de compras
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
 				PO_View.getTimeout());
 		assertTrue(elementos.size() == 2);
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 		
 		/**
-		 * Parte 2 - Comprobar que ya no aparecen en mis ofertas los objetos comprados (en este caso Pedro)
+		 * Parte 2 - Comprobar que ya no aparecen en Mis Ofertas los objetos comprados (en este caso marta)
 		 */
 		// Vamos al formulario de login.
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
 		// Rellenamos el formulario con una cuenta de usuario
-		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		PO_LoginView.fillForm(driver, "marta@gmail.com", "123456");
 		// Hacemos click en Tus Ofertas
-		PO_HomeView.clickOption(driver, "offer/list", "id", "purchases");
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "offersList");
+		// Comprobamos que ya no las puede ver (marta al inicializar la bdd, tiene 3 ofertas, 2 compradas y 1 en venta)
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
+				PO_View.getTimeout());
+		assertTrue(elementos.size() == 1);
 	}
 }
