@@ -542,10 +542,9 @@ public class MyWallapopTests {
 		// Comprobamos que entramos en la página de añadir una oferta:
 		PO_View.checkElement(driver, "text", "Añadir oferta");
 		
-		// Rellenamos el formulario con datos válidos:
-		//PO_AddOfferView.fillForm(driver, " ", "Vendo batidora", "2019-04-22", "25.0");
-		
-		//PO_View.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
+		// Rellenamos el formulario con datos no válidos:
+		PO_AddOfferView.fillForm(driver, " ", "Vendo batidora", "2019-04-22", "25.0");
+		PO_View.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 		
 		
 		// Nos desconectamos
