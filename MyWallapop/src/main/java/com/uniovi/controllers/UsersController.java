@@ -162,8 +162,6 @@ public class UsersController {
 			session.setAttribute("error", "Error.buy.money");
 			return "/home :: tableOffers";
 		}
-//		if (offerToBuy.getUser() == null)
-//			session.setAttribute("error", "Error.buy.seller");
 		return "redirect:/home";
 	}
 	

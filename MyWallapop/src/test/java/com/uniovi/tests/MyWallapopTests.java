@@ -53,8 +53,8 @@ public class MyWallapopTests {
 	private UsersRepository usersRepository;
 
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	//static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
-	static String Geckdriver024 = "C:\\Users\\crist\\Documents\\geckodriver024win64.exe";
+	static String Geckdriver024 = "C:\\Users\\Iván\\Desktop\\SDI\\materialPruebas\\geckodriver024win64.exe";
+	//static String Geckdriver024 = "C:\\Users\\crist\\Documents\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
 	static String URL = "http://localhost:8090";
@@ -141,7 +141,7 @@ public class MyWallapopTests {
 				add(offer1);
 				add(offer2);
 				add(offer3);
-				add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real", "2019-01-21", 500.0, user2));
+				add(new Offer("Cuadro", "Autorretrato de van Gogh tamaño real, pero es el original...", "2019-01-21", 83.0, user2));
 				add(new Offer("Teclado con luces", "Gaming", "2019-04-20", 20.0, user2));
 			}
 		};
@@ -230,6 +230,7 @@ public class MyWallapopTests {
 	public void PR02() {
 		// Vamos al formulario de registro
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		
 		// Rellenamos el formulario
 		PO_RegisterView.fillForm(driver, " ", "Jose", "Perez Vazquez", "123456", "123456");
 		// Comprobamos el error de email vacío
@@ -268,7 +269,6 @@ public class MyWallapopTests {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		// Rellenamos el formulario
 		PO_RegisterView.fillForm(driver, "pedro@gmail.com", "Pedro", "Diaz Atapuerca", "123456", "123456");
-		PO_View.getP();
 		// Comprobamos el error de email repetido
 		PO_RegisterView.checkKey(driver, "Error.signup.email.duplicate", PO_Properties.getSPANISH());
 	}
@@ -691,18 +691,113 @@ public class MyWallapopTests {
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
 		// Rellenamos el formulario con una cuenta de usuario
 		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
-		// Introducimos una cadena en el campo de busqueda
+		// Introducimos una cadena sin coincidencias en el campo de busqueda
 		WebElement searchInput = driver.findElement(By.name("searchText"));
 		searchInput.click();
 		searchInput.clear();
-		searchInput.sendKeys("cadena imposible de hacer coincidencias");
+		searchInput.sendKeys("cadena imposible de hacer coincidir");
 		// Hacemos click en el boton search
 		By boton = By.className("btn");
 		driver.findElement(boton).click();
 		// Comprobamos que la tabla está vacía
+		assertTrue(driver.findElements(By.xpath("//table[@id='tableOffers']/tbody/tr")).size() == 0);
+	}
+	
+	// PR23. Sobre una búsqueda determinada (a elección de desarrollador), comprar una oferta que deja
+	// un saldo positivo en el contador del comprador. Y comprobar que el contador se actualiza
+	// correctamente en la vista del comprador.
+	@Test
+	public void PR23() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
+		
+		// Introducimos una cadena en el campo de busqueda. Nos deberían de salir 2 ofertas, una vendida y otra no.
+		WebElement searchInput = driver.findElement(By.name("searchText"));
+		searchInput.click();
+		searchInput.clear();
+		searchInput.sendKeys("si");
+		// Hacemos click en el boton search
+		By boton = By.className("btn");
+		driver.findElement(boton).click();
+		// Comprobamos que la tabla tiene efectivamente 2 ofertas
+		assertTrue(driver.findElements(By.xpath("//table[@id='tableOffers']/tbody/tr")).size() == 2);
+		// Compramos la segunda oferta 'Teclado básico' (la no vendida)
+		List<WebElement> elementos = PO_View.checkElement(driver, "text", "Comprar");
+		elementos.get(0).click();
+		
+		// Hacemos click en la opción del principal.username
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "btnGroup", PO_NavView.getTimeout());
+		elementos.get(0).click();
+		// Esperamos a que aparezca el menú de opciones
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "usersdropdownMenuButton", PO_NavView.getTimeout());
+		// Comprobamos que el contador se actualiza correctamente (83€-20€=63€)
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "balance", PO_NavView.getTimeout());
+		assertTrue(elementos.get(0).getText().equals("63.0€"));
 		
 	}
 	
+	// PR24. Sobre una búsqueda determinada (a elección de desarrollador), comprar una oferta que deja
+	// un saldo 0 en el contador del comprobador. Y comprobar que el contador se actualiza correctamente en
+	// la vista del comprador.
+	@Test
+	public void PR24() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "maria@gmail.com", "123456");
+		
+		// Introducimos una cadena en el campo de busqueda, en este caso queremos un producto especifico
+		WebElement searchInput = driver.findElement(By.name("searchText"));
+		searchInput.click();
+		searchInput.clear();
+		searchInput.sendKeys("Cuadro");
+		// Hacemos click en el boton search
+		By boton = By.className("btn");
+		driver.findElement(boton).click();
+		// Comprobamos que solo sale 1 oferta
+		assertTrue(driver.findElements(By.xpath("//table[@id='tableOffers']/tbody/tr")).size() == 1);
+		// La compramos
+		List<WebElement> elementos = PO_View.checkElement(driver, "text", "Comprar");
+		elementos.get(0).click();
+		
+		// Hacemos click en la opción del principal.username
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "btnGroup", PO_NavView.getTimeout());
+		elementos.get(0).click();
+		// Esperamos a que aparezca el menú de opciones
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "usersdropdownMenuButton", PO_NavView.getTimeout());
+		// Comprobamos que el contador a 0
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", "balance", PO_NavView.getTimeout());
+		assertTrue(elementos.get(0).getText().equals("0.0€"));
+	}
+	
+	// PR25. Sobre una búsqueda determinada (a elección de desarrollador), intentar comprar una oferta
+	// que esté por encima de saldo disponible del comprador. Y comprobar que se muestra el mensaje de
+	// saldo no suficiente.
+	@Test
+	public void PR25() {
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		
+		// Introducimos una cadena en el campo de busqueda, en este caso queremos un producto especifico
+		WebElement searchInput = driver.findElement(By.name("searchText"));
+		searchInput.click();
+		searchInput.clear();
+		searchInput.sendKeys("Coche");
+		// Hacemos click en el boton search
+		By boton = By.className("btn");
+		driver.findElement(boton).click();
+		// Comprobamos que solo sale 1 oferta
+		assertTrue(driver.findElements(By.xpath("//table[@id='tableOffers']/tbody/tr")).size() == 1);
+		// La compramos
+		List<WebElement> elementos = PO_View.checkElement(driver, "text", "Comprar");
+		elementos.get(0).click();
+		// Nos sale un error
+		PO_LoginView.checkKey(driver, "Error.buy.money", PO_Properties.getSPANISH());
+	}
 	
 	// PR26. Ir a la opción de ofertas compradas del usuario y mostrar la lista. Comprobar que aparecen
 	// las ofertas que deben aparecer.	

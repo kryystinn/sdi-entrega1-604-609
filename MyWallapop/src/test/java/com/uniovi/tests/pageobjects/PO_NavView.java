@@ -61,13 +61,13 @@ public class PO_NavView extends PO_View {
 	 * @param optionId es el id la opcion del menu dropdown sobre la que quieres hacer click
 	 */
 	public static void clickDropdownMenuOption(WebDriver driver, String menuButtonId, String menuId, String optionId) {
-		// Hacemos click en la opción Ver Usuarios
-		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuButtonId, PO_NavView.getTimeout());
+		// Hacemos click en la opción del nav deseada.
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuButtonId, getTimeout());
 		elementos.get(0).click();
 		// Esperamos a que aparezca el menú de opciones.
-		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuId, PO_NavView.getTimeout());
-		// Clickamos la opción deseada
-		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", optionId, PO_NavView.getTimeout());
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", menuId, getTimeout());
+		// Clickamos la opción especificada.
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", optionId, getTimeout());
 		elementos.get(0).click();
 	}
 
