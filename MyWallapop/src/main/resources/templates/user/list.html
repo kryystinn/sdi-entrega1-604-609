@@ -5,7 +5,7 @@
 	<!-- Barra de Navegación superior -->
 	<nav th:replace="fragments/nav" />
 	<div class="container">
-		<h3 th:text="#{list.users}" style="text-align: left; margin-top: 30px;"></h3>
+		<h2 th:text="#{list.users}" style="text-align: left; margin-top: 30px;"></h2>
 		<p th:if="${usersList.size()==0}" th:text=#{text.noUserInTheSystem}></p>
 		
 		<form action="/user/delete" method="post">

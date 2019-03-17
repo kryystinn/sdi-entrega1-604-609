@@ -655,8 +655,6 @@ public class MyWallapopTests {
 		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
 	}
 
-
-	
 	
 	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la página que
 	// corresponde con el listado de las ofertas existentes en el sistema
@@ -744,6 +742,94 @@ public class MyWallapopTests {
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr",
 				PO_View.getTimeout());
 		assertTrue(elementos.size() == 1);
+	}
+	
+	// PR27. Visualizar al menos cuatro páginas en Español/Inglés/Español (comprobando que algunas
+	// de las etiquetas cambian al idioma correspondiente). Página principal/Opciones Principales de
+	// Usuario/Listado de Usuarios de Admin/Vista de alta de Oferta.
+	@Test
+	public void PR27() {
+		/*
+		 * Parte 1: Página principal: home con usuario estándar
+		 */
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		// Comprobamos que estamos en la página principal:
+		SeleniumUtils.textoPresentePagina(driver, "Ofertas");
+		// Cambiamos el idioma a inglés
+		PO_NavView.changeIdiom(driver, "btnEnglish");
+		// Comprobamos que es inglés:
+		SeleniumUtils.textoPresentePagina(driver, "Offers");
+		// Volvemos a ponerlo en español y comprobamos:
+		PO_NavView.changeIdiom(driver, "btnSpanish");
+		// Comprobamos que esté en español
+		SeleniumUtils.textoPresentePagina(driver, "Ofertas");
+		
+		/*
+		 * Parte 2: Opciones principales del usuario: vista de Mis Compras
+		 */
+		// Vamos a la ventana de mis compras:
+		driver.findElement(By.id("purchases")).click();
+		// Comprobamos que está en español:
+		SeleniumUtils.textoPresentePagina(driver, "Mis compras");
+		// Cambiamos el idioma a inglés
+		PO_NavView.changeIdiom(driver, "btnEnglish");
+		// Comprobamos que es inglés:
+		SeleniumUtils.textoPresentePagina(driver, "My purchases");
+		// Volvemos a ponerlo en español y comprobamos:
+		PO_NavView.changeIdiom(driver, "btnSpanish");
+		// Comprobamos que esté en español
+		SeleniumUtils.textoPresentePagina(driver, "Mis compras");
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+		
+		/*
+		 * Parte 3: Lista de Usuarios como admin
+		 */
+		// Vamos al formulario de login:
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con la cuenta de admin:
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Comprobamos que estamos en la página principal:
+		SeleniumUtils.textoPresentePagina(driver, "Bienvenido a myWallapop");
+		// Vamos a la página del listado de usuarios:
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Comprobamos que es español:
+		SeleniumUtils.textoPresentePagina(driver, "Usuarios registrados del sistema");
+		// Vamos a home y cambiamos el idioma a inglés
+		driver.findElement(By.id("home")).click();
+		PO_NavView.changeIdiom(driver, "btnEnglish");
+		// Vamos al listado de nuevo y comprobamos que está en inglés:
+		PO_NavView.clickDropdownMenuOption(driver, "btnUserManagement", "admin-user-menu", "seeUsers");
+		// Comprobamos que es español:
+		SeleniumUtils.textoPresentePagina(driver, "Registered system users");
+		// Nos desconectamos
+		PO_NavView.clickDropdownMenuOption(driver, "btnGroup", "usersdropdownMenuButton", "btnLogout");
+		
+		/*
+		 * Parte 3: Vista de alta de una oferta
+		 */
+		PO_NavView.changeIdiom(driver, "btnSpanish");
+		// Vamos al formulario de login.
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario con una cuenta de usuario
+		PO_LoginView.fillForm(driver, "pedro@gmail.com", "123456");
+		// Comprobamos que estamos en la página principal:
+		SeleniumUtils.textoPresentePagina(driver, "Ofertas");
+		// Vamos a la pantalla de añadir una oferta:
+		PO_NavView.clickDropdownMenuOption(driver, "btnOffersManagement", "offersDropdownMenu", "addOffer");
+		// Comprobamos que está en español:
+		SeleniumUtils.textoPresentePagina(driver, "Añadir oferta");
+		// Cambiamos el idioma a inglés
+		PO_NavView.changeIdiom(driver, "btnEnglish");
+		// Comprobamos que está en inglés:
+		SeleniumUtils.textoPresentePagina(driver, "Add offer");
+		// Volvemos a español y comprobamos:
+		PO_NavView.changeIdiom(driver, "btnSpanish");
+		// Comprobamos que está en inglés:
+		SeleniumUtils.textoPresentePagina(driver, "Precio");
 	}
 	
 	// PR39. Registro de usuario con datos inválidos (longitud de email, nombre y apellidos incorrecta).

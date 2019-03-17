@@ -11,7 +11,7 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
-				<li><a href="/home" th:text=#{nav.home} style="color: black;"></a></li>
+				<li><a th:id="home" href="/home" th:text=#{nav.home} style="color: black;"></a></li>
 				
 				<li id="users-menu" class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
 					<a id="btnUserManagement" class="dropdown-toggle" data-toggle="dropdown" href="#"
